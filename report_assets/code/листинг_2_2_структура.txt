@@ -1,0 +1,54 @@
+bank-marketing-mlops/
+├── .dvc/
+│   ├── .gitignore
+│   └── config
+├── data/
+│   ├── processed/
+│   │   └── .gitkeep
+│   └── raw/
+│       ├── .gitignore
+│       ├── bank-additional-full.csv
+│       └── bank-additional-full.csv.dvc
+├── notebooks/
+│   └── .gitkeep
+├── report_assets/
+│   ├── code/
+│   │   ├── листинг_2_1_pyproject.toml
+│   │   ├── листинг_2_2_структура.txt
+│   │   └── листинг_2_3_dvc.txt
+│   ├── img/
+│   │   ├── рис_1_1.png
+│   │   ├── рис_1_2.png
+│   │   ├── рис_3_1.png
+│   │   ├── рис_3_2.png
+│   │   ├── рис_3_3.png
+│   │   ├── рис_3_4.png
+│   │   └── рис_3_5.png
+│   ├── eda_out.txt
+│   └── ИТОГ.md
+├── reports/
+│   └── figures/
+│       ├── .gitkeep
+│       ├── рис_3_1.png
+│       ├── рис_3_2.png
+│       ├── рис_3_3.png
+│       ├── рис_3_4.png
+│       └── рис_3_5.png
+├── scripts/
+│   ├── download_data.py
+│   ├── draw_schemes.py
+│   ├── eda.py
+│   └── tree.py
+├── src/
+│   └── bank_marketing/
+│       ├── __init__.py
+│       ├── config.py
+│       └── data.py
+├── .dockerignore
+├── .dvcignore
+├── .gitignore
+├── .python-version
+├── Dockerfile
+├── pyproject.toml
+├── README.md
+└── uv.lock

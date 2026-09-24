@@ -1,0 +1,60 @@
+> git init -b main
+Initialized empty Git repository in C:/CourseWork/bank-marketing-mlops/.git/
+
+> uv run dvc init
+Initialized DVC repository.
+You can now commit the changes to git.
+[... ссылки на документацию DVC опущены ...]
+
+> uv run dvc remote add -d localstore ../dvc-storage
+Setting 'localstore' as a default remote.
+
+> cat .dvc/config
+[core]
+    remote = localstore
+['remote "localstore"']
+    url = ../../dvc-storage
+
+> uv run dvc add data/raw/bank-additional-full.csv
+To track the changes with git, run:
+        git add 'data\raw\bank-additional-full.csv.dvc' 'data\raw\.gitignore'
+[... подсказка про core.autostage опущена ...]
+
+> cat data/raw/bank-additional-full.csv.dvc
+outs:
+- md5: f6cb2c1256ffe2836b36df321f46e92c
+  size: 5834924
+  hash: md5
+  path: bank-additional-full.csv
+
+> git add .dvc/config .dvc/.gitignore .dvcignore data/raw/bank-additional-full.csv.dvc \
+      data/raw/.gitignore scripts/download_data.py
+> git commit -m "Данные: загрузка UCI Bank Marketing, версионирование через DVC"
+[main 155da14] Данные: загрузка UCI Bank Marketing, версионирование через DVC
+ 6 files changed, 61 insertions(+)
+ create mode 100644 .dvc/.gitignore
+ create mode 100644 .dvc/config
+ create mode 100644 .dvcignore
+ create mode 100644 data/raw/.gitignore
+ create mode 100644 data/raw/bank-additional-full.csv.dvc
+ create mode 100644 scripts/download_data.py
+
+> uv run dvc push
+1 file pushed
+
+> uv run dvc status -c
+Cache and remote 'localstore' are in sync.
+
+> git remote add origin https://github.com/Lishangie/bank-marketing-mlops.git
+> git push -u origin main
+branch 'main' set up to track 'origin/main'.
+To https://github.com/Lishangie/bank-marketing-mlops.git
+ * [new branch]      main -> main
+
+> git log --oneline
+8b04b9d Docker-образ на python:3.12-slim с uv, скрипт дерева, листинг pyproject
+ddab8b7 Схемы: жизненный цикл модели и конвейер проекта
+5106164 EDA: баланс классов, распределения, отклик по категориям, корреляции, динамика
+155da14 Данные: загрузка UCI Bank Marketing, версионирование через DVC
+91cb8f9 Структура проекта: пакет bank_marketing, каталоги данных и отчётов
+6ae9d11 Окружение: uv, Python 3.12, зависимости в uv.lock
