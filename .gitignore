@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.ruff_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Окружение
+.venv/
+.env
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Данные (версионируются DVC)
+/data/raw/*.zip
+
+# Служебное
+PROMPT.md
+.vscode/
+.idea/
+Thumbs.db
