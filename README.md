@@ -11,3 +11,6 @@ uv run python scripts/eda.py      # EDA: рисунки и report_assets/eda_out
 ```
 
 Скачать данные заново: `uv run python scripts/download_data.py`.
+
+Docker: `docker build -t bank-marketing .`, затем
+`docker run --rm -v ${PWD}/data:/app/data -v ${PWD}/report_assets:/app/report_assets bank-marketing`.

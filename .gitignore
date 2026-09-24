@@ -24,3 +24,6 @@ PROMPT.md
 .vscode/
 .idea/
 Thumbs.db
+
+# Итоговая сводка (содержит хеш последнего коммита)
+report_assets/ИТОГ.md
