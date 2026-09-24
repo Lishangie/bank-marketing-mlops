@@ -1,0 +1,94 @@
+1. Размер: 41188 строк x 21 столбцов
+  столбец: тип, число уникальных
+  age: int64, 78; job: str, 12; marital: str, 4; education: str, 8; default: str, 3;
+  housing: str, 3; loan: str, 3; contact: str, 2; month: str, 10; day_of_week: str, 5;
+  duration: int64, 1544; campaign: int64, 42; pdays: int64, 27; previous: int64, 8;
+  poutcome: str, 3; emp.var.rate: float64, 10; cons.price.idx: float64, 26;
+  cons.conf.idx: float64, 26; euribor3m: float64, 316; nr.employed: float64, 11;
+  y: int64, 2
+2. Целевая y: no = 36548 (88.73%), yes = 4640 (11.27%)
+3. Полных дубликатов строк: 12
+4. Значения 'unknown' (число, доля):
+  job 330 (0.80%); marital 80 (0.19%); education 1731 (4.20%); default 8597 (20.87%);
+  housing 990 (2.40%); loan 990 (2.40%); contact 0 (0.00%); month 0 (0.00%);
+  day_of_week 0 (0.00%); poutcome 0 (0.00%)
+5. Доли: pdays = 999 96.32%; previous = 0 86.34%; poutcome = nonexistent 86.34%
+6. Числовые признаки:
+  признак              mean       std       min    median       max
+  age                40.024    10.421    17.000    38.000    98.000
+  duration          258.285   259.279     0.000   180.000  4918.000
+  campaign            2.568     2.770     1.000     2.000    56.000
+  pdays             962.475   186.911     0.000   999.000   999.000
+  previous            0.173     0.495     0.000     0.000     7.000
+  emp.var.rate        0.082     1.571    -3.400     1.100     1.400
+  cons.price.idx     93.576     0.579    92.201    93.749    94.767
+  cons.conf.idx     -40.503     4.628   -50.800   -41.800   -26.900
+  euribor3m           3.621     1.734     0.634     4.857     5.045
+  nr.employed      5167.036    72.252  4963.600  5191.000  5228.100
+7. Доля отклика (n) по категориям:
+  job: student 31.4% (875); retired 25.2% (1720); unemployed 14.2% (1014);
+      admin. 13.0% (10422); management 11.2% (2924); unknown 11.2% (330);
+      technician 10.8% (6743); self-employed 10.5% (1421); housemaid 10.0% (1060);
+      entrepreneur 8.5% (1456); services 8.1% (3969); blue-collar 6.9% (9254)
+  marital: unknown 15.0% (80); single 14.0% (11568); divorced 10.3% (4612);
+      married 10.2% (24928)
+  education: illiterate 22.2% (18); basic.4y 10.2% (4176); basic.6y 8.2% (2292);
+      basic.9y 7.8% (6045); high.school 10.8% (9515); professional.course 11.3% (5243);
+      university.degree 13.7% (12168); unknown 14.5% (1731)
+  default: no 12.9% (32588); unknown 5.2% (8597); yes 0.0% (3)
+  housing: yes 11.6% (21576); no 10.9% (18622); unknown 10.8% (990)
+  loan: no 11.3% (33950); yes 10.9% (6248); unknown 10.8% (990)
+  contact: cellular 14.7% (26144); telephone 5.2% (15044)
+  month: mar 50.5% (546); apr 20.5% (2632); may 6.4% (13769); jun 10.5% (5318);
+      jul 9.0% (7174); aug 10.6% (6178); sep 44.9% (570); oct 43.9% (718);
+      nov 10.1% (4101); dec 48.9% (182)
+  day_of_week: mon 9.9% (8514); tue 11.8% (8090); wed 11.7% (8134); thu 12.1% (8623);
+      fri 10.8% (7827)
+  poutcome: success 65.1% (1373); failure 14.2% (4252); nonexistent 8.8% (35563)
+8. Спирмен: 10 самых сильных пар (по модулю) среди числовых признаков:
+  emp.var.rate - nr.employed +0.945; emp.var.rate - euribor3m +0.940;
+  euribor3m - nr.employed +0.929; emp.var.rate - cons.price.idx +0.665;
+  pdays - previous -0.510; cons.price.idx - euribor3m +0.491;
+  cons.price.idx - nr.employed +0.465; previous - euribor3m -0.455;
+  previous - nr.employed -0.439; previous - emp.var.rate -0.435
+   Корреляция с y:
+  age -0.012; duration +0.349; campaign -0.064; pdays -0.325; previous +0.201;
+  emp.var.rate -0.247; cons.price.idx -0.122; cons.conf.idx +0.041; euribor3m -0.267;
+  nr.employed -0.284
+9. Утечка duration: ROC-AUC одного duration = 0.8184; duration = 0: 4 строк, y = yes у 0
+10. Время: блоков периода по порядку строк: 26, уникальных периодов: 26;
+  первый 2008-05, последний 2010-11 -> монотонно, периоды = год-месяц
+  период        n   отклик  euribor3m
+  2008-05    7763    3.09%      4.858
+  2008-06    4374    4.30%      4.932
+  2008-07    6685    6.09%      4.962
+  2008-08    5175    5.24%      4.965
+  2008-10      67   62.69%      4.924
+  2008-11    3616    5.25%      4.115
+  2008-12      10   10.00%      3.493
+  2009-03     282   44.68%      1.646
+  2009-04    2458   17.98%      1.412
+  2009-05    5794    9.04%      1.294
+  2009-06     715   36.92%      1.258
+  2009-07     178   37.08%      1.025
+  2009-08     770   34.29%      0.866
+  2009-09     267   39.70%      0.783
+  2009-10     447   40.27%      0.735
+  2009-11     357   47.06%      0.716
+  2009-12     172   51.16%      0.713
+  2010-03     264   56.82%      0.646
+  2010-04     174   55.75%      0.646
+  2010-05     212   57.55%      0.686
+  2010-06     229   46.72%      0.733
+  2010-07     311   56.59%      0.850
+  2010-08     233   51.50%      0.899
+  2010-09     303   49.50%      0.880
+  2010-10     204   45.59%      0.995
+  2010-11     128   45.31%      1.042
+  Разбиение по порядку строк 80/20:
+    первые 80%: 32950 строк, 2008-05..2009-05, отклик 6.37%
+    последние 20%: 8238 строк, 2009-05..2010-11, отклик 30.83%
+11. Версии:
+  Python 3.12.12; uv 0.9.2 (141369ce7 2025-10-10); git 2.51.0.windows.2; dvc 3.67.1;
+  pandas 3.0.6; scikit-learn 1.9.1; catboost 1.2.10; mlflow 3.16.1; evidently 0.7.23;
+  matplotlib 3.11.2
