@@ -21,42 +21,22 @@ import seaborn as sns
 from matplotlib.ticker import PercentFormatter
 from sklearn.metrics import roc_auc_score
 
-from bank_marketing.config import ASSETS_DIR, ASSETS_IMG_DIR, FIGURES_DIR, TARGET
+from bank_marketing.config import (
+    ASSETS_DIR,
+    ASSETS_IMG_DIR,
+    CATEGORICAL,
+    FIGURES_DIR,
+    NUMERIC,
+    TARGET,
+)
 from bank_marketing.data import load_raw
+from bank_marketing.periods import MONTHS, add_periods
+from bank_marketing.plotting import C_ACCENT, C_NO, C_YES, CM, LABEL_BOX, WIDTH, apply_style
+from bank_marketing.plotting import save as save_fig
 
-CM = 1 / 2.54
-DPI = 200
-WIDTH = 16 * CM
 MAX_LINES = 150
 WRAP = 90
 
-C_NO, C_YES, C_ACCENT = "#7f93a8", "#d9822b", "#3c5a78"
-LABEL_BOX = {"boxstyle": "square,pad=0.1", "facecolor": "white", "edgecolor": "none", "alpha": 0.85}
-
-NUMERIC = [
-    "age",
-    "duration",
-    "campaign",
-    "pdays",
-    "previous",
-    "emp.var.rate",
-    "cons.price.idx",
-    "cons.conf.idx",
-    "euribor3m",
-    "nr.employed",
-]
-CATEGORICAL = [
-    "job",
-    "marital",
-    "education",
-    "default",
-    "housing",
-    "loan",
-    "contact",
-    "month",
-    "day_of_week",
-    "poutcome",
-]
 RU = {
     "age": "Возраст, лет",
     "duration": "Длительность звонка, с",
@@ -75,7 +55,6 @@ RU = {
     "day_of_week": "День недели",
     "poutcome": "Итог прошлой\nкампании",
 }
-MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
 DAYS = ["mon", "tue", "wed", "thu", "fri"]
 EDU = [
     "illiterate",
@@ -90,62 +69,12 @@ EDU = [
 # Признаки, у которых ось X обрезается по 99-му перцентилю (длинный хвост).
 CLIP_99 = {"duration", "campaign"}
 
-plt.rcParams.update(
-    {
-        "font.family": "DejaVu Sans",
-        "font.size": 9,
-        "axes.labelsize": 9,
-        "xtick.labelsize": 8.5,
-        "ytick.labelsize": 8.5,
-        "legend.fontsize": 8.5,
-        "axes.spines.top": False,
-        "axes.spines.right": False,
-        "figure.facecolor": "white",
-        "axes.facecolor": "white",
-    }
-)
+apply_style(font_size=9, tick_size=8.5)
 
 
 def save(fig, name: str) -> None:
-    for folder in (ASSETS_IMG_DIR, FIGURES_DIR):
-        folder.mkdir(parents=True, exist_ok=True)
-        fig.savefig(folder / name, dpi=DPI, facecolor="white")
-    plt.close(fig)
-
-
-def add_periods(df: pd.DataFrame) -> tuple[pd.DataFrame, bool, str]:
-    """Восстанавливает год-месяц по порядку строк.
-
-    Данные упорядочены по времени с мая 2008 г.; год растёт, когда номер
-    месяца уменьшается относительно предыдущей строки. Проверяется, что
-    каждый период — один непрерывный блок строк и последний период — 2010-11.
-    При нарушении используются блоки по 2000 строк.
-    """
-    m = df["month"].map({name: i + 1 for i, name in enumerate(MONTHS)}).to_numpy()
-    year = 2008 + np.concatenate([[0], np.cumsum(np.diff(m) < 0)])
-    period = pd.Series([f"{y}-{mm:02d}" for y, mm in zip(year, m, strict=True)], index=df.index)
-    runs = int((period != period.shift()).sum())
-    ok = (
-        runs == period.nunique()
-        and period.is_monotonic_increasing
-        and period.iloc[0] == "2008-05"
-        and period.iloc[-1] == "2010-11"
-    )
-    note = (
-        f"блоков периода по порядку строк: {runs}, уникальных периодов: {period.nunique()};\n"
-        f"  первый {period.iloc[0]}, последний {period.iloc[-1]} -> "
-        + (
-            "монотонно, периоды = год-месяц"
-            if ok
-            else "НЕ монотонно, использованы блоки по 2000 строк"
-        )
-    )
-    out = df.copy()
-    if ok:
-        out["period"] = period
-    else:
-        out["period"] = [f"блок {i // 2000 + 1:02d}" for i in range(len(df))]
-    return out, ok, note
+    # Как в ПР1: без bbox_inches="tight", размер страницы задаётся figsize.
+    save_fig(fig, name, (ASSETS_IMG_DIR, FIGURES_DIR), tight=False)
 
 
 def fig_balance(df: pd.DataFrame) -> None:
