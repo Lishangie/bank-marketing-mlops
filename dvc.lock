@@ -71,8 +71,8 @@ stages:
       size: 5030
     - path: src/bank_marketing/stats.py
       hash: md5
-      md5: 7387d7f424c65d586995f4dbb2942261
-      size: 2895
+      md5: 569a4ac7a8218c5b387dbc9785ce5134
+      size: 3190
     outs:
     - path: report_assets/pr2/eda_initial_out.txt
       hash: md5
@@ -110,3 +110,42 @@ stages:
       hash: md5
       md5: 9ed6e65d12002cff029cce75840b9edc
       size: 113139
+  validate:
+    cmd: uv run python scripts/validate.py
+    deps:
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: scripts/validate.py
+      hash: md5
+      md5: f5ad32abe8da1c8b52c04a8486634eb7
+      size: 6874
+    - path: src/bank_marketing/stats.py
+      hash: md5
+      md5: 569a4ac7a8218c5b387dbc9785ce5134
+      size: 3190
+    - path: src/bank_marketing/validation.py
+      hash: md5
+      md5: 703ea28efd30a09e7787db520fde3a3c
+      size: 11377
+    outs:
+    - path: models/reference/data_reference.json
+      hash: md5
+      md5: 8180facbaae6cde18448a42839b052f9
+      size: 3067
+    - path: report_assets/pr2/validate_out.txt
+      hash: md5
+      md5: 6b794476c2a9226e8eda5813dba49543
+      size: 5328
+    - path: reports/validation
+      hash: md5
+      md5: 67b9720253ebc928a7449209006889b7.dir
+      size: 15871
+      nfiles: 5

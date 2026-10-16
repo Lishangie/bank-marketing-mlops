@@ -1,0 +1,102 @@
+{
+  "part": "batch_03",
+  "rows_in": 5794,
+  "rows_out": 5793,
+  "periods": [
+    "2009-05"
+  ],
+  "last_processed_before": "2009-04",
+  "verdict": "принята с предупреждениями",
+  "time_ms": 44.5,
+  "peak_mb": 1.8,
+  "checks": [
+    {
+      "rule": "D-01",
+      "violations": 0,
+      "base": 5794,
+      "unit": "записей",
+      "status": "ok",
+      "action": "—",
+      "details": "",
+      "share": 0.0,
+      "requirement": "все 21 исходный столбец и row_id, period; типы приводятся"
+    },
+    {
+      "rule": "D-02",
+      "violations": 0,
+      "base": 5794,
+      "unit": "записей",
+      "status": "ok",
+      "action": "—",
+      "details": "последний обработанный: 2009-04",
+      "share": 0.0,
+      "requirement": "периоды порции позже последнего обработанного"
+    },
+    {
+      "rule": "D-03",
+      "violations": 1,
+      "base": 5794,
+      "unit": "записей",
+      "status": "fixed",
+      "action": "лишние копии удалены, предупреждение",
+      "details": "",
+      "share": 0.00017259233690024162,
+      "requirement": "нет полных дубликатов (без row_id)"
+    },
+    {
+      "rule": "D-04",
+      "violations": 0,
+      "base": 5793,
+      "unit": "записей",
+      "status": "ok",
+      "action": "—",
+      "details": "",
+      "share": 0.0,
+      "requirement": "age 17–100, campaign ≥ 1, previous ≥ 0, pdays 0–999, duration ≥ 0"
+    },
+    {
+      "rule": "D-05",
+      "violations": 0,
+      "base": 5793,
+      "unit": "записей",
+      "status": "ok",
+      "action": "—",
+      "details": "новые по сравнению с исходной частью: poutcome: success 154",
+      "share": 0.0,
+      "requirement": "значения категориальных признаков из справочника"
+    },
+    {
+      "rule": "D-06",
+      "violations": 0,
+      "base": 10,
+      "unit": "признаков",
+      "status": "ok",
+      "action": "—",
+      "details": "",
+      "share": 0.0,
+      "requirement": "доля unknown выросла не больше чем на 5 п. п."
+    },
+    {
+      "rule": "D-07",
+      "violations": 0,
+      "base": 5793,
+      "unit": "записей",
+      "status": "ok",
+      "action": "—",
+      "details": "nonexistent ⇔ previous = 0: 0; pdays ≠ 999 при previous = 0: 0",
+      "share": 0.0,
+      "requirement": "nonexistent ⇔ previous = 0; pdays ≠ 999 ⇒ previous > 0"
+    },
+    {
+      "rule": "D-08",
+      "violations": 3,
+      "base": 3,
+      "unit": "признаков",
+      "status": "warning",
+      "action": "предупреждение о дрейфе",
+      "details": "euribor3m 8.840; nr.employed 17.771; cons.conf.idx 17.039",
+      "share": 1.0,
+      "requirement": "PSI euribor3m, nr.employed, cons.conf.idx не больше 0,2"
+    }
+  ]
+}

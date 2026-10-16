@@ -44,3 +44,18 @@ stages:
           cache: false
       - reports/figures/pr2/рис_1_5.png:
           cache: false
+  validate:
+    cmd: uv run python scripts/validate.py
+    deps:
+      - scripts/validate.py
+      - src/bank_marketing/validation.py
+      - src/bank_marketing/stats.py
+      - data/initial
+      - data/incoming
+    outs:
+      - models/reference/data_reference.json:
+          cache: false
+      - reports/validation:
+          cache: false
+      - report_assets/pr2/validate_out.txt:
+          cache: false

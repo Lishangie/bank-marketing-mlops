@@ -37,9 +37,7 @@ def bin_shares(x: pd.Series, spec: dict) -> np.ndarray:
 def psi(ref: pd.Series, cur: pd.Series, spec: dict | None = None) -> float:
     """Population Stability Index распределения cur относительно ref."""
     spec = spec or psi_bins(ref)
-    p = np.clip(bin_shares(ref, spec), PSI_EPS, None)
-    q = np.clip(bin_shares(cur, spec), PSI_EPS, None)
-    return float(np.sum((q - p) * np.log(q / p)))
+    return psi_from_shares(bin_shares(ref, spec).tolist(), cur, spec)
 
 
 def cramers_v(x: pd.Series, y: pd.Series) -> float:
@@ -60,3 +58,10 @@ def wilson_ci(k: int, n: int, conf: float = 0.95) -> tuple[float, float]:
     center = (p + z**2 / (2 * n)) / denom
     half = z * np.sqrt(p * (1 - p) / n + z**2 / (4 * n**2)) / denom
     return float(center - half), float(center + half)
+
+
+def psi_from_shares(ref_shares: list[float], cur: pd.Series, spec: dict) -> float:
+    """PSI по сохранённым долям бинов исходной части (без самих данных)."""
+    p = np.clip(np.asarray(ref_shares, dtype=float), PSI_EPS, None)
+    q = np.clip(bin_shares(cur, spec), PSI_EPS, None)
+    return float(np.sum((q - p) * np.log(q / p)))

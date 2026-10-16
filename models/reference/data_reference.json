@@ -1,0 +1,169 @@
+{
+  "source": "data/initial/initial.csv",
+  "rows": 24064,
+  "last_period": "2008-10",
+  "categories": {
+    "job": [
+      "admin.",
+      "blue-collar",
+      "entrepreneur",
+      "housemaid",
+      "management",
+      "retired",
+      "self-employed",
+      "services",
+      "student",
+      "technician",
+      "unemployed",
+      "unknown"
+    ],
+    "marital": [
+      "divorced",
+      "married",
+      "single",
+      "unknown"
+    ],
+    "education": [
+      "basic.4y",
+      "basic.6y",
+      "basic.9y",
+      "high.school",
+      "illiterate",
+      "professional.course",
+      "university.degree",
+      "unknown"
+    ],
+    "default": [
+      "no",
+      "unknown",
+      "yes"
+    ],
+    "housing": [
+      "no",
+      "unknown",
+      "yes"
+    ],
+    "loan": [
+      "no",
+      "unknown",
+      "yes"
+    ],
+    "contact": [
+      "cellular",
+      "telephone"
+    ],
+    "month": [
+      "aug",
+      "jul",
+      "jun",
+      "may",
+      "oct"
+    ],
+    "day_of_week": [
+      "fri",
+      "mon",
+      "thu",
+      "tue",
+      "wed"
+    ],
+    "poutcome": [
+      "failure",
+      "nonexistent"
+    ]
+  },
+  "domain_values": {
+    "month": [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "dec"
+    ],
+    "poutcome": [
+      "failure",
+      "nonexistent",
+      "success"
+    ]
+  },
+  "unknown_share": {
+    "job": 0.010181183510638297,
+    "marital": 0.0016622340425531915,
+    "education": 0.043924534574468085,
+    "default": 0.2808344414893617,
+    "housing": 0.02514128989361702,
+    "loan": 0.02514128989361702,
+    "contact": 0.0,
+    "month": 0.0,
+    "day_of_week": 0.0,
+    "poutcome": 0.0
+  },
+  "psi": {
+    "euribor3m": {
+      "bins": {
+        "kind": "quantile",
+        "edges": [
+          4.857,
+          4.86,
+          4.957,
+          4.96,
+          4.962,
+          4.963,
+          4.966
+        ]
+      },
+      "shares": [
+        0.08572972074468085,
+        0.18238863031914893,
+        0.12022107712765957,
+        0.08365192819148937,
+        0.12113530585106383,
+        0.10858543882978723,
+        0.1966838430851064,
+        0.10160405585106383
+      ]
+    },
+    "nr.employed": {
+      "bins": {
+        "kind": "values",
+        "values": [
+          5191.0,
+          5195.8,
+          5228.1
+        ]
+      },
+      "shares": [
+        0.32259807180851063,
+        0.0027842420212765956,
+        0.6746176861702128,
+        0.0
+      ]
+    },
+    "cons.conf.idx": {
+      "bins": {
+        "kind": "values",
+        "values": [
+          -42.7,
+          -41.8,
+          -40.4,
+          -36.4,
+          -36.1
+        ]
+      },
+      "shares": [
+        0.27780086436170215,
+        0.1817652925531915,
+        0.0027842420212765956,
+        0.32259807180851063,
+        0.21505152925531915,
+        0.0
+      ]
+    }
+  }
+}
