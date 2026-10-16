@@ -1,0 +1,46 @@
+schema: '2.0'
+stages:
+  split:
+    cmd: uv run python scripts/split_data.py
+    deps:
+    - path: data/raw/bank-additional-full.csv
+      hash: md5
+      md5: f6cb2c1256ffe2836b36df321f46e92c
+      size: 5834924
+    - path: scripts/split_data.py
+      hash: md5
+      md5: e18d176dd942dbaa6ab6876fa2e4aca8
+      size: 10655
+    - path: src/bank_marketing/periods.py
+      hash: md5
+      md5: 87eb9ec9a306a9af89254a86a90e6a31
+      size: 2285
+    params:
+      params.yaml:
+        split:
+          initial_share: 0.6
+          n_batches: 4
+          seed: 23
+    outs:
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: report_assets/pr2/img/рис_1_1.png
+      hash: md5
+      md5: d8c929d41526a1e1a5365943a567bb00
+      size: 119790
+    - path: report_assets/pr2/split_out.txt
+      hash: md5
+      md5: 2e46818ad2a23da0e12dd401d0e74fb1
+      size: 1677
+    - path: reports/figures/pr2/рис_1_1.png
+      hash: md5
+      md5: 5286fa9f498ea4091906a4a9557bb78d
+      size: 120047

@@ -1,0 +1,18 @@
+stages:
+  split:
+    cmd: uv run python scripts/split_data.py
+    deps:
+      - scripts/split_data.py
+      - src/bank_marketing/periods.py
+      - data/raw/bank-additional-full.csv
+    params:
+      - split
+    outs:
+      - data/initial
+      - data/incoming
+      - report_assets/pr2/split_out.txt:
+          cache: false
+      - report_assets/pr2/img/рис_1_1.png:
+          cache: false
+      - reports/figures/pr2/рис_1_1.png:
+          cache: false

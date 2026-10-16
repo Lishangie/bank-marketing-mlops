@@ -33,6 +33,8 @@ packages = ["src/bank_marketing"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+# Листинги для отчёта — фрагменты кода, не самостоятельные модули.
+extend-exclude = ["report_assets"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
