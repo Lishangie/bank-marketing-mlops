@@ -302,7 +302,8 @@ def block_shift(parts: dict[str, pd.DataFrame]) -> list[str]:
     init = parts["initial"]
     batches = [n for n in parts if n != "initial"]
     out.append(
-        "PSI относительно исходной части (10 квантильных бинов; ≤ 10 значений — по значениям):"
+        "PSI относительно исходной части — справка, в проверке качества не используется"
+        " для макропоказателей (10 квантильных бинов; ≤ 10 значений — по значениям):"
     )
     out.append(f"  {'признак':<15}{'бины':<10}" + "".join(f"{b:>10}" for b in batches))
     for c in PSI_FEATURES:

@@ -11,8 +11,6 @@
   ],
   "last_processed_before": null,
   "verdict": "принята с предупреждениями",
-  "time_ms": 255.1,
-  "peak_mb": 7.4,
   "checks": [
     {
       "rule": "D-01",
@@ -94,13 +92,24 @@
     {
       "rule": "D-08",
       "violations": 0,
-      "base": 3,
+      "base": 5,
       "unit": "признаков",
       "status": "ok",
       "action": "—",
-      "details": "euribor3m 0.000; nr.employed 0.000; cons.conf.idx 0.000",
+      "details": "euribor3m 0.0%; nr.employed 0.0%; emp.var.rate 0.0%; cons.price.idx 0.0%; cons.conf.idx 0.0%",
       "share": 0.0,
-      "requirement": "PSI euribor3m, nr.employed, cons.conf.idx не больше 0,2"
+      "requirement": "доля записей с макропоказателями вне [min; max] исходной части ≤ 5 % по каждому"
+    },
+    {
+      "rule": "D-09",
+      "violations": 0,
+      "base": 2,
+      "unit": "признаков",
+      "status": "ok",
+      "action": "—",
+      "details": "age 0.000; campaign 0.000",
+      "share": 0.0,
+      "requirement": "PSI age и campaign относительно исходной части не больше 0,2"
     }
   ]
 }

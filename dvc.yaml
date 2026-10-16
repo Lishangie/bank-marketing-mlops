@@ -49,6 +49,7 @@ stages:
     deps:
       - scripts/validate.py
       - src/bank_marketing/validation.py
+      - src/bank_marketing/data.py
       - src/bank_marketing/stats.py
       - data/initial
       - data/incoming

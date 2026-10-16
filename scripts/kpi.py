@@ -1,7 +1,7 @@
 """Ключевые показатели без модели по исходной части и порциям.
 
-Число записей, доля отклика по меткам, доля unknown в default,
-PSI euribor3m относительно исходной части. Показатели, требующие модели,
+Число записей, доля отклика по меткам, доля unknown в default, доля записей
+с euribor3m вне диапазона [min; max] исходной части. Показатели, требующие модели,
 только перечисляются (считаются с ПР3).
 
 Результат: report_assets/pr2/kpi_out.txt.
@@ -10,7 +10,7 @@ PSI euribor3m относительно исходной части. Показа
 from bank_marketing.config import PR2_DIR, TARGET
 from bank_marketing.data import load_parts
 from bank_marketing.report import emit
-from bank_marketing.stats import psi, psi_bins
+from bank_marketing.stats import out_of_range_share
 
 MODEL_KPI = [
     "ожидаемое число вкладов в топ-k = сумма прогнозных вероятностей k лучших клиентов волны",
@@ -22,23 +22,23 @@ MODEL_KPI = [
 def main() -> None:
     parts = load_parts()
     init = parts["initial"]
-    spec = psi_bins(init["euribor3m"])
+    lo, hi = init["euribor3m"].min(), init["euribor3m"].max()
     out = [
         "Ключевые показатели без модели",
         "",
         f"{'часть':<11}{'строк':>7}{'yes':>6}{'доля отклика':>14}{'unknown default':>17}"
-        f"{'PSI euribor3m':>15}",
+        f"{'euribor3m вне диапазона':>25}",
     ]
     for name, d in parts.items():
         out.append(
             f"{name:<11}{len(d):>7}{int(d[TARGET].sum()):>6}{d[TARGET].mean():>14.2%}"
             f"{(d['default'] == 'unknown').mean():>17.2%}"
-            f"{psi(init['euribor3m'], d['euribor3m'], spec):>15.3f}"
+            f"{out_of_range_share(d['euribor3m'], lo, hi):>25.2%}"
         )
-    bins = "по значениям" if spec["kind"] == "values" else f"{len(spec['edges']) + 1} квантильных"
     out += [
         "",
-        f"PSI: бины по исходной части ({bins}); > 0,2 — значимый дрейф.",
+        f"Диапазон euribor3m исходной части: [{lo:g}; {hi:g}]; доля вне него > 5 % —",
+        "модель вне области обучения (требование D-08).",
         "",
         "Показатели с моделью (определены, не считаются до ПР3):",
         *[f"  - {k}" for k in MODEL_KPI],

@@ -7,8 +7,6 @@
   ],
   "last_processed_before": "2008-10",
   "verdict": "принята с предупреждениями",
-  "time_ms": 65.5,
-  "peak_mb": 1.2,
   "checks": [
     {
       "rule": "D-01",
@@ -89,14 +87,25 @@
     },
     {
       "rule": "D-08",
-      "violations": 3,
-      "base": 3,
+      "violations": 2,
+      "base": 5,
+      "unit": "признаков",
+      "status": "warning",
+      "action": "предупреждение: модель вне области обучения, требуется переобучение",
+      "details": "euribor3m 100.0%; nr.employed 0.0%; emp.var.rate 0.0%; cons.price.idx 100.0%; cons.conf.idx 0.0%",
+      "share": 0.4,
+      "requirement": "доля записей с макропоказателями вне [min; max] исходной части ≤ 5 % по каждому"
+    },
+    {
+      "rule": "D-09",
+      "violations": 1,
+      "base": 2,
       "unit": "признаков",
       "status": "warning",
       "action": "предупреждение о дрейфе",
-      "details": "euribor3m 8.840; nr.employed 14.420; cons.conf.idx 17.039",
-      "share": 1.0,
-      "requirement": "PSI euribor3m, nr.employed, cons.conf.idx не больше 0,2"
+      "details": "age 0.309; campaign 0.178",
+      "share": 0.5,
+      "requirement": "PSI age и campaign относительно исходной части не больше 0,2"
     }
   ]
 }

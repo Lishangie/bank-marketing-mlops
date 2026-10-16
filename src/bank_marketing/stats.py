@@ -65,3 +65,9 @@ def psi_from_shares(ref_shares: list[float], cur: pd.Series, spec: dict) -> floa
     p = np.clip(np.asarray(ref_shares, dtype=float), PSI_EPS, None)
     q = np.clip(bin_shares(cur, spec), PSI_EPS, None)
     return float(np.sum((q - p) * np.log(q / p)))
+
+
+def out_of_range_share(x: pd.Series, lo: float, hi: float) -> float:
+    """Доля значений вне отрезка [lo; hi] (область значений исходной части)."""
+    x = x.dropna()
+    return float((~x.between(lo, hi)).mean()) if len(x) else 0.0

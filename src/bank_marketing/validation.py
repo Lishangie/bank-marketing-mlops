@@ -1,7 +1,8 @@
-"""Требования к качеству данных D-01…D-08.
+"""Требования к качеству данных D-01…D-09.
 
 Каждая проверка возвращает CheckResult (число нарушений, действие, статус)
-и таблицу после действия. Справочники категорий, доли unknown и бины PSI
+и таблицу после действия. Справочники категорий, доли unknown, диапазоны
+макропоказателей и бины PSI
 берутся из исходной части (build_reference) и хранятся в
 models/reference/data_reference.json.
 """
@@ -13,7 +14,7 @@ import pandas as pd
 
 from bank_marketing.config import CATEGORICAL, ID_COLUMNS, MACRO, RAW_COLUMNS, TARGET
 from bank_marketing.periods import MONTHS
-from bank_marketing.stats import bin_shares, psi_bins, psi_from_shares
+from bank_marketing.stats import bin_shares, out_of_range_share, psi_bins, psi_from_shares
 
 OK, FIXED, WARNING, CRITICAL = "ok", "fixed", "warning", "critical"
 
@@ -25,7 +26,8 @@ RULES = {
     "D-05": "значения категориальных признаков из справочника",
     "D-06": "доля unknown выросла не больше чем на 5 п. п.",
     "D-07": "nonexistent ⇔ previous = 0; pdays ≠ 999 ⇒ previous > 0",
-    "D-08": "PSI euribor3m, nr.employed, cons.conf.idx не больше 0,2",
+    "D-08": "доля записей с макропоказателями вне [min; max] исходной части ≤ 5 % по каждому",
+    "D-09": "PSI age и campaign относительно исходной части не больше 0,2",
 }
 ACTIONS = {
     "D-01": "порция не обрабатывается",
@@ -35,7 +37,8 @@ ACTIONS = {
     "D-05": "значение заменено на unknown, предупреждение",
     "D-06": "предупреждение, проверка источника",
     "D-07": "предупреждение, записи остаются",
-    "D-08": "предупреждение о дрейфе",
+    "D-08": "предупреждение: модель вне области обучения, требуется переобучение",
+    "D-09": "предупреждение о дрейфе",
 }
 
 INT_COLUMNS = ["age", "duration", "campaign", "pdays", "previous"]
@@ -43,7 +46,9 @@ FLOAT_COLUMNS = MACRO
 # Значения из описания набора UCI, которых может не быть в исходной части
 # (она охватывает только май–октябрь 2008 г. и не содержит poutcome = success).
 DOMAIN_VALUES = {"month": MONTHS, "poutcome": ["failure", "nonexistent", "success"]}
-DRIFT_FEATURES = ["euribor3m", "nr.employed", "cons.conf.idx"]
+RANGE_FEATURES = ["euribor3m", "nr.employed", "emp.var.rate", "cons.price.idx", "cons.conf.idx"]
+OUT_OF_RANGE_MAX = 0.05
+DRIFT_FEATURES = ["age", "campaign"]
 UNKNOWN_GROWTH_MAX = 0.05
 PSI_MAX = 0.2
 
@@ -82,6 +87,7 @@ def build_reference(df: pd.DataFrame) -> dict:
         "categories": {c: sorted(df[c].unique().tolist()) for c in CATEGORICAL},
         "domain_values": DOMAIN_VALUES,
         "unknown_share": {c: float((df[c] == "unknown").mean()) for c in CATEGORICAL},
+        "ranges": {c: [float(df[c].min()), float(df[c].max())] for c in RANGE_FEATURES},
         "psi": {},
     }
     for c in DRIFT_FEATURES:
@@ -197,21 +203,29 @@ def check_consistency(df: pd.DataFrame) -> CheckResult:
     return _result("D-07", (a | b).sum(), len(df), WARNING, details=details)
 
 
+def check_macro_range(df: pd.DataFrame, ref: dict) -> CheckResult:
+    """D-08: доля записей с макропоказателем вне [min; max] исходной части ≤ 5 %."""
+    shares = {c: out_of_range_share(df[c], *ref["ranges"][c]) for c in RANGE_FEATURES}
+    n = sum(v > OUT_OF_RANGE_MAX for v in shares.values())
+    details = "; ".join(f"{c} {v:.1%}" for c, v in shares.items())
+    return _result("D-08", n, len(RANGE_FEATURES), WARNING, "признаков", details)
+
+
 def check_drift(df: pd.DataFrame, ref: dict) -> CheckResult:
-    """D-08: PSI макропоказателей относительно исходной части ≤ 0,2."""
+    """D-09: PSI age и campaign относительно исходной части ≤ 0,2."""
     values = {
         c: psi_from_shares(ref["psi"][c]["shares"], df[c], ref["psi"][c]["bins"])
         for c in DRIFT_FEATURES
     }
     n = sum(v > PSI_MAX for v in values.values())
     details = "; ".join(f"{c} {v:.3f}" for c, v in values.items())
-    return _result("D-08", n, len(DRIFT_FEATURES), WARNING, "признаков", details)
+    return _result("D-09", n, len(DRIFT_FEATURES), WARNING, "признаков", details)
 
 
 def validate(
     raw: pd.DataFrame, ref: dict | None, last_period: str | None
 ) -> tuple[pd.DataFrame | None, list[CheckResult]]:
-    """Прогоняет D-01…D-08 по порядку; при критическом нарушении — остановка.
+    """Прогоняет D-01…D-09 по порядку; при критическом нарушении — остановка.
 
     ref = None — проверка исходной части: справочник строится по ней самой.
     """
@@ -232,6 +246,7 @@ def validate(
         res,
         check_unknown_growth(df, ref),
         check_consistency(df),
+        check_macro_range(df, ref),
         check_drift(df, ref),
     ]
     return df, results
@@ -255,3 +270,11 @@ def to_jsonable(obj):
     if isinstance(obj, np.generic):
         return obj.item()
     return obj
+
+
+def reference_from_initial(raw: pd.DataFrame) -> dict:
+    """Справочник по исходной части, прочитанной как строки."""
+    _, df = check_schema(raw)
+    if df is None:
+        raise ValueError("исходная часть не проходит D-01")
+    return build_reference(df)

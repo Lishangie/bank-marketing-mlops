@@ -63,21 +63,21 @@ stages:
       nfiles: 1
     - path: scripts/eda_initial.py
       hash: md5
-      md5: ce5ace389c30093b5f6326e3a8ee1132
-      size: 21048
+      md5: 8b15c8bd5346cfb81517662c7cd7a147
+      size: 21187
     - path: src/bank_marketing/plotting.py
       hash: md5
       md5: 5d213a4a039d6971a7a47c55708ca1ab
       size: 5030
     - path: src/bank_marketing/stats.py
       hash: md5
-      md5: 569a4ac7a8218c5b387dbc9785ce5134
-      size: 3190
+      md5: 8fa972dae1597018d69ee4e7e8e802dd
+      size: 3475
     outs:
     - path: report_assets/pr2/eda_initial_out.txt
       hash: md5
-      md5: db400479b512a0006d782b514794c4f5
-      size: 12629
+      md5: a753bbd6045a4be45e5065f899d79c85
+      size: 12756
     - path: report_assets/pr2/img/рис_1_2.png
       hash: md5
       md5: c4b39670d0ddf5a4715243ed20f360f4
@@ -125,29 +125,33 @@ stages:
       nfiles: 1
     - path: scripts/validate.py
       hash: md5
-      md5: f5ad32abe8da1c8b52c04a8486634eb7
-      size: 6874
+      md5: 6e2ca1d83a926daed812d4076fce1ab8
+      size: 4230
+    - path: src/bank_marketing/data.py
+      hash: md5
+      md5: ce972a8f83d3fe2c9ee23967c9128118
+      size: 1580
     - path: src/bank_marketing/stats.py
       hash: md5
-      md5: 569a4ac7a8218c5b387dbc9785ce5134
-      size: 3190
+      md5: 8fa972dae1597018d69ee4e7e8e802dd
+      size: 3475
     - path: src/bank_marketing/validation.py
       hash: md5
-      md5: 703ea28efd30a09e7787db520fde3a3c
-      size: 11377
+      md5: 9e5edf4b7a630bc37c2f13f6bfd957d0
+      size: 13090
     outs:
     - path: models/reference/data_reference.json
       hash: md5
-      md5: 8180facbaae6cde18448a42839b052f9
-      size: 3067
+      md5: 3a503920d138604bde00ccf579fda5e6
+      size: 3138
     - path: report_assets/pr2/validate_out.txt
       hash: md5
-      md5: 4f90aa35404a7940cd7525d34c7dbdcf
-      size: 5330
+      md5: db28769383810a704578b87d8d09d03f
+      size: 6316
     - path: reports/validation
       hash: md5
-      md5: cc4ae6b09714f7341a5804abb19cd3f3.dir
-      size: 15871
+      md5: 88fbd3e6ecd534a47085620568697fcb.dir
+      size: 18419
       nfiles: 5
   kpi:
     cmd: uv run python scripts/kpi.py
@@ -164,17 +168,17 @@ stages:
       nfiles: 1
     - path: scripts/kpi.py
       hash: md5
-      md5: 5b38b125d7eff0bc354edc00edf395b0
-      size: 2223
+      md5: c7923f5e46e6e2ce67e58836e0138e41
+      size: 2290
     - path: src/bank_marketing/stats.py
       hash: md5
-      md5: 569a4ac7a8218c5b387dbc9785ce5134
-      size: 3190
+      md5: 8fa972dae1597018d69ee4e7e8e802dd
+      size: 3475
     outs:
     - path: report_assets/pr2/kpi_out.txt
       hash: md5
-      md5: 6d94b5f3162e56fb78cdbc30b62a63cd
-      size: 1150
+      md5: dc289b4a8674a0ffc20feab7b07ffdb9
+      size: 1296
   feature_candidates:
     cmd: uv run python scripts/feature_candidates.py
     deps:

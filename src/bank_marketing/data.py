@@ -29,3 +29,9 @@ def load_parts() -> dict[str, pd.DataFrame]:
     if not INITIAL_FILE.exists() or len(files) == 1:
         raise FileNotFoundError("нет data/initial или data/incoming: выполните `dvc repro`")
     return {path.stem: load_raw(path) for path in files}
+
+
+def load_raw_parts() -> dict[str, pd.DataFrame]:
+    """Исходная часть и порции как строки (для проверки качества, D-01 приводит типы)."""
+    files = [INITIAL_FILE, *batch_files()]
+    return {path.stem: pd.read_csv(path, sep=CSV_SEP, dtype=str) for path in files}

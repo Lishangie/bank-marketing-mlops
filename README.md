@@ -21,6 +21,10 @@ uv run python scripts/eda.py   # EDA всего набора (ПР1): рисун
 | `kpi` | `scripts/kpi.py` | `report_assets/pr2/kpi_out.txt` |
 | `feature_candidates` | `scripts/feature_candidates.py` | `report_assets/pr2/features_out.txt` |
 
+Замер времени проверки качества (вне конвейера: зависит от машины и нагрузки):
+`uv run python scripts/benchmark.py` → `report_assets/pr2/benchmark_out.txt`
+(медиана из 5 прогонов по каждой части и по порции из 10 000 записей).
+
 Скачать данные заново: `uv run python scripts/download_data.py`.
 
 Docker: `docker build -t bank-marketing .`, затем
