@@ -69,3 +69,12 @@ stages:
     outs:
       - report_assets/pr2/kpi_out.txt:
           cache: false
+  feature_candidates:
+    cmd: uv run python scripts/feature_candidates.py
+    deps:
+      - scripts/feature_candidates.py
+      - data/initial
+      - data/incoming
+    outs:
+      - report_assets/pr2/features_out.txt:
+          cache: false

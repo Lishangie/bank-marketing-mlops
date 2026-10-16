@@ -175,3 +175,25 @@ stages:
       hash: md5
       md5: 6d94b5f3162e56fb78cdbc30b62a63cd
       size: 1150
+  feature_candidates:
+    cmd: uv run python scripts/feature_candidates.py
+    deps:
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: scripts/feature_candidates.py
+      hash: md5
+      md5: c7e59da71fa57cd34d740aca3a37f1d2
+      size: 6225
+    outs:
+    - path: report_assets/pr2/features_out.txt
+      hash: md5
+      md5: 9bf131a7359251091911eab3e4d2b9f5
+      size: 3630
