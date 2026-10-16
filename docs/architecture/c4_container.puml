@@ -1,54 +1,66 @@
 @startuml c4_container
-!pragma layout smetana
 !include <C4/C4_Container>
 skinparam dpi 200
 skinparam defaultFontName Arial
-skinparam defaultFontSize 13
+skinparam defaultFontSize 12
 ' Технология в [ ] — тем же кеглем, что и описание (по умолчанию мельче).
-!$TECHN_FONT_SIZE = 13
+!$TECHN_FONT_SIZE = 12
 LAYOUT_TOP_DOWN()
 HIDE_STEREOTYPE()
+skinparam nodesep 6
+skinparam ranksep 12
 
 System_Ext(crm, "CRM банка")
 System_Ext(macro, "Источник\nмакропоказателей")
 
-' Колонки: модели/MLflow — приём/проверка/подготовка/скоринг —
-' показатели/хранилище/API — панель (раскладка smetana).
 Boundary(system, "Система прогноза отклика") {
   Container(ingest, "Приём порций", "Python, DVC", "Чтение и типы")
-  Container(train, "Обучение\nмоделей", "CatBoost, sklearn", "Обучение и оценка")
-  Container(monitor, "Расчёт показателей\nи мониторинг", "Python, Evidently", "Показатели и дрейф")
   Container(validate, "Проверка качества", "Python", "Проверки D-01…D-09")
-  Container(mlflow, "MLflow", "Tracking, Registry", "Версии моделей")
-  ContainerDb(store, "Хранилище данных", "Parquet/CSV, DVC", "Порции, признаки, прогнозы")
   Container(prep, "Подготовка данных\nи признаков", "pandas, sklearn", "Очистка и признаки")
+  Container(train, "Обучение\nмоделей", "CatBoost, sklearn", "Обучение и оценка")
+  Container(mlflow, "MLflow", "Tracking, Registry", "Версии моделей")
   Container(score, "Пакетный скоринг", "Python", "Вероятности и ранги")
-  Container(panel, "Панель показателей", "Streamlit", "Значения и динамика")
+  Container(monitor, "Расчёт показателей\nи мониторинг", "Python, Evidently", "Показатели и дрейф")
+  ContainerDb(store, "Хранилище\nданных", "Parquet/CSV,\nDVC", "Порции, признаки,\nпрогнозы")
+  Container(panel, "Панель\nпоказателей", "Streamlit", "Значения\nи динамика")
   Container(api, "API прогноза", "FastAPI", "Прогноз по клиенту")
 }
 
-' Ряды задаются невидимыми связями сверху (Lay_D) и направлением связей
-' (Rel_U — цель выше). Подписанные связи идут только между рядами:
-' smetana не строит подписанные рёбра внутри одного ряда.
-Lay_R(macro, crm)
-Lay_D(macro, train)
-Lay_D(crm, monitor)
+' Три колонки: приём/проверка/подготовка — обучение/MLflow/скоринг —
+' показатели/хранилище/панель/API. Lay_D — порядок внутри колонки,
+' Lay_R — соседство колонок в одном ряду; направления Rel_D/Rel_U совпадают
+' с сеткой, иначе Graphviz растягивает колонки по цепочке связей.
+' Скоринг стоит рядом с API в нижнем ряду: связь «Подготовка → Скоринг»
+' идёт вниз и не пересекается с подписями у MLflow.
+Lay_D(ingest, validate)
+Lay_D(validate, prep)
+Lay_D(train, mlflow)
+Lay_D(monitor, store)
 Lay_D(store, panel)
 Lay_D(panel, api)
+Lay_R(ingest, train)
+Lay_R(train, monitor)
+Lay_R(validate, mlflow)
+Lay_R(mlflow, store)
+Lay_R(prep, panel)
+Lay_R(score, api)
+Lay_R(macro, crm)
+Lay_D(crm, monitor)
+Lay_D(macro, ingest)
 
-Rel(crm, ingest, "Порции, итоги")
+Rel(crm, ingest, "Порции,\nитоги")
 Rel(macro, ingest, "Показатели")
-Rel(ingest, validate, "Порция")
-Rel(validate, prep, "Данные")
-Rel(prep, score, "Признаки")
+Rel_D(ingest, validate, "Порция")
+Rel_D(validate, prep, "Данные")
+Rel_D(prep, score, "Признаки")
 Rel_U(prep, store, "Признаки,\nпараметры")
-Rel(train, mlflow, "Модели")
-Rel(train, store, "Признаки")
+Rel_D(train, mlflow, "Модели")
+Rel_D(train, store, "Признаки")
 Rel_U(score, mlflow, "Модель")
 Rel_U(score, store, "Вероятности")
-Rel(monitor, store, "Метки, витрина")
+Rel_D(monitor, store, "Метки,\nвитрина")
 Rel_U(panel, store, "Витрина")
 Rel_U(api, mlflow, "Модель")
 Rel_U(api, store, "Параметры")
-Rel_U(store, crm, "Список обзвона")
+Rel_U(store, crm, "Список\nобзвона")
 @enduml

@@ -1,9 +1,12 @@
 """Рендер диаграмм PlantUML (docs/architecture/*.puml) в PNG для отчёта.
 
 Java ищется так: переносная JDK в tools/jdk-*, затем JAVA_HOME, затем PATH;
-нужна Java 11+. PNG пишутся в docs/architecture/png/ и копируются
-в report_assets/pr2/img/ и reports/figures/pr2/ под именами рисунков.
-Печатается размер каждого PNG и ширина на странице при 200 dpi.
+нужна Java 11+. Graphviz (dot) для диаграмм без `!pragma layout smetana` —
+переносной в tools/graphviz, передаётся через GRAPHVIZ_DOT.
+PNG пишутся в docs/architecture/png/ и копируются в report_assets/pr2/img/
+и reports/figures/pr2/ под именами рисунков. Для каждого печатается размер
+при 200 dpi, кегль и шрифт в pt при натуральном размере и проверка
+ограничений книжной страницы.
 """
 
 import os
@@ -19,7 +22,8 @@ SRC_DIR = ROOT / "docs" / "architecture"
 OUT_DIR = SRC_DIR / "png"
 JAR = ROOT / "tools" / "plantuml.jar"
 DPI = 200
-PAGE_CM = 16  # ширина рисунка в отчёте
+# Ограничения книжной страницы при натуральном размере (200 dpi).
+MAX_W_PX, MAX_H_PX, MIN_FONT = 1339, 1496, 12  # 17 см, 19 см, кегль 12 = 9 pt
 FIGURES = {
     "c4_context": "рис_2_1.png",
     "c4_container": "рис_2_2.png",
@@ -51,6 +55,20 @@ def find_java() -> str:
     raise RuntimeError("нужна Java 11+: см. README, раздел «Диаграммы»")
 
 
+def find_dot() -> str | None:
+    exe = "dot.exe" if os.name == "nt" else "dot"
+    for dot in (ROOT / "tools" / "graphviz" / "bin" / exe, Path(shutil.which("dot") or "")):
+        if dot.name and dot.exists():
+            return str(dot)
+    return None
+
+
+def font_size(puml: Path) -> int:
+    """Наименьший кегль, заданный в исходнике (defaultFontSize и *FontSize)."""
+    sizes = re.findall(r"(?i)font_?size\s*=?\s*(\d+)", puml.read_text(encoding="utf-8"))
+    return min(map(int, sizes)) if sizes else 14
+
+
 def png_size(path: Path) -> tuple[int, int]:
     with path.open("rb") as f:
         head = f.read(24)
@@ -61,26 +79,35 @@ def main() -> None:
     if not JAR.exists():
         raise FileNotFoundError(f"{JAR} не найден: см. README, раздел «Диаграммы»")
     java = find_java()
+    env = dict(os.environ)
+    dot = find_dot()
+    if dot:
+        env["GRAPHVIZ_DOT"] = dot
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     sources = [SRC_DIR / f"{name}.puml" for name in FIGURES]
     cmd = [java, "-jar", str(JAR), "-tpng", "-charset", "UTF-8", "-o", str(OUT_DIR)]
-    subprocess.run([*cmd, *map(str, sources)], check=True)
+    subprocess.run([*cmd, *map(str, sources)], check=True, env=env)
 
     version = subprocess.run(
         [java, "-jar", str(JAR), "-version"], capture_output=True, text=True
     ).stdout.splitlines()[0]
-    print(f"{version}; Java {java_version(java)}")
+    dot_version = (
+        "нет"
+        if not dot
+        else subprocess.run([dot, "-V"], capture_output=True, text=True).stderr.strip()
+    )
+    print(f"{version}; Java {java_version(java)}; Graphviz: {dot_version}")
     for name, figure in FIGURES.items():
         png = OUT_DIR / f"{name}.png"
         for folder in (PR2_IMG_DIR, PR2_FIGURES_DIR):
             folder.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(png, folder / figure)
         w, h = png_size(png)
-        natural_cm = w / DPI * 2.54
-        scale = min(1.0, PAGE_CM / natural_cm)
+        size = font_size(SRC_DIR / f"{name}.puml")
+        fits = w <= MAX_W_PX and h <= MAX_H_PX and size >= MIN_FONT
         print(
-            f"{figure}: {w} x {h} px; при {DPI} dpi {natural_cm:.1f} x {h / DPI * 2.54:.1f} см; "
-            f"масштаб при ширине {PAGE_CM} см: {scale:.2f}"
+            f"{figure}: {w} x {h} px = {w / DPI * 2.54:.1f} x {h / DPI * 2.54:.1f} см; "
+            f"кегль {size} = {size * 0.75:.2f} pt; {'укладывается' if fits else 'НЕ укладывается'}"
         )
 
 

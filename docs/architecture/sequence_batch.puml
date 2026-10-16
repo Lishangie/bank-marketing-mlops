@@ -2,20 +2,36 @@
 !pragma layout smetana
 skinparam dpi 200
 skinparam defaultFontName Arial
-skinparam defaultFontSize 14
+skinparam defaultFontSize 12
 skinparam shadowing false
 skinparam sequenceMessageAlign center
+' Отступы участников заданы стилем: skinparam ParticipantPadding в PlantUML
+' 1.2026 устарел и печатает в PNG плашку-предупреждение. BoxPadding не нужен —
+' группировок box нет. maxMessageSize не задан: перенос по 90 px делил
+' подписи на 3–4 строки и увеличивал высоту до 1649 px; подписи разбиты
+' вручную, не больше 3 слов в строке.
+<style>
+sequenceDiagram {
+  participant {
+    Padding 1
+    Margin 0
+  }
+}
+</style>
 hide footbox
 
+' Порядок участников подобран под ширину страницы: сообщения с длинными
+' словами («предупреждение», «предсказания», «очищенные») идут через
+' несколько линий жизни, а не между соседними.
 participant "CRM" as crm
 participant "Приём\nпорций" as ingest
 participant "Проверка\nкачества" as validate
+participant "Расчёт\nпоказателей" as monitor
 participant "Подготовка\nпризнаков" as prep
 participant "Пакетный\nскоринг" as score
-participant "MLflow" as mlflow
-database "Хранилище" as store
-participant "Расчёт\nпоказателей" as monitor
 participant "Панель" as panel
+participant "MLflow" as mlflow
+participant "Хранилище" as store
 
 crm -> ingest : порция
 ingest -> store : сохранить порцию\n(версия DVC)
@@ -26,7 +42,7 @@ else иначе
   validate -> prep : очищенные\nданные
   prep -> store : загрузить параметры\nпреобразований
   prep -> score : признаки
-  score -> mlflow : загрузить\nрабочую\nверсию\nмодели
+  score -> mlflow : загрузить рабочую\nверсию модели
   score -> store : вероятности\nи ранги
   store -> crm : список обзвона
   monitor <- store : предсказания\nи метки\nпрошлых волн

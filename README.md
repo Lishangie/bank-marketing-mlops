@@ -32,16 +32,22 @@ Docker: `docker build -t bank-marketing .`, затем
 
 ## Диаграммы
 
-Исходники PlantUML — `docs/architecture/*.puml` (C4 из встроенной stdlib, раскладка smetana, Graphviz не нужен).
-Нужны Java 11+ и `tools/plantuml.jar` (каталог `tools/` не версионируется):
+Исходники PlantUML — `docs/architecture/*.puml` (C4 из встроенной stdlib). Рис. 2.2 (контейнеры)
+и 2.3 (варианты использования) раскладываются Graphviz, остальные — встроенной раскладкой smetana.
+Нужны Java 11+, `tools/plantuml.jar` и Graphviz в `tools/graphviz` (каталог `tools/` не версионируется):
 
 ```powershell
 New-Item -ItemType Directory -Force tools
 curl.exe -L -o tools/plantuml.jar https://github.com/plantuml/plantuml/releases/download/v1.2026.8/plantuml.jar
 # Java 11+: winget install --id Microsoft.OpenJDK.21 -e
 # или переносная JDK в tools/jdk-*: https://aka.ms/download-jdk/microsoft-jdk-21-windows-x64.zip
+# Graphviz (переносной zip с graphviz.org, распаковать в tools/graphviz):
+curl.exe -L -o tools/graphviz.zip https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/16.1.0/windows_10_cmake_Release_Graphviz-16.1.0-win64.zip
 uv run python scripts/render_diagrams.py
 ```
 
-Версия PlantUML: **1.2026.8**. Скрипт ищет Java в `tools/jdk-*`, `JAVA_HOME`, затем в `PATH`,
-пишет PNG в `docs/architecture/png/` и копирует их в `report_assets/pr2/img/рис_2_1…рис_2_5.png`.
+Версии: PlantUML **1.2026.8**, Graphviz **16.1.0**. Скрипт ищет Java в `tools/jdk-*`, `JAVA_HOME`,
+затем в `PATH`; `dot` — в `tools/graphviz/bin`, затем в `PATH`, и передаёт его PlantUML через
+`GRAPHVIZ_DOT`. PNG пишутся в `docs/architecture/png/` и копируются в
+`report_assets/pr2/img/рис_2_1…рис_2_5.png`; для каждого печатаются размер при 200 dpi, кегль
+и проверка ограничений книжной страницы (≤ 17 × 19 см, кегль ≥ 12 = 9 pt).
