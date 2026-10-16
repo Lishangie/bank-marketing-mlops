@@ -4,47 +4,51 @@
 skinparam dpi 200
 skinparam defaultFontName Arial
 skinparam defaultFontSize 13
+' Технология в [ ] — тем же кеглем, что и описание (по умолчанию мельче).
+!$TECHN_FONT_SIZE = 13
 LAYOUT_TOP_DOWN()
 HIDE_STEREOTYPE()
 
 System_Ext(crm, "CRM банка")
-System_Ext(macro, "Источник макропоказателей")
+System_Ext(macro, "Источник\nмакропоказателей")
 
+' Колонки: модели/MLflow — приём/проверка/подготовка/скоринг —
+' показатели/хранилище/API — панель (раскладка smetana).
 Boundary(system, "Система прогноза отклика") {
-  Container(ingest, "Приём порций", "Python, стадия DVC", "Читает порцию, приводит типы")
-  Container(validate, "Проверка качества", "Python", "Требования D-01…D-08, отчёт о проверке")
-  Container(prep, "Подготовка данных и признаков", "pandas, scikit-learn", "Очистка, признаки,\nпараметры преобразований")
-  Container(score, "Пакетный скоринг", "Python", "Вероятности и ранги\nпо порции")
-  ContainerDb(store, "Хранилище данных", "Parquet/CSV + DVC", "Исходные данные, порции,\nпризнаки, предсказания,\nвитрина показателей")
-  Container(train, "Обучение моделей", "CatBoost, scikit-learn")
-  Container(mlflow, "MLflow", "Tracking, Model Registry", "Эксперименты\nи версии моделей")
-  Container(api, "API прогноза", "FastAPI", "Прогноз по одному\nклиенту")
-  Container(monitor, "Расчёт показателей\nи мониторинг", "Python, Evidently", "Показатели, дрейф")
-  Container(panel, "Панель показателей", "Streamlit", "Текущие значения\nи динамика")
+  Container(ingest, "Приём порций", "Python, DVC", "Чтение и типы")
+  Container(train, "Обучение\nмоделей", "CatBoost, sklearn", "Обучение и оценка")
+  Container(monitor, "Расчёт показателей\nи мониторинг", "Python, Evidently", "Показатели и дрейф")
+  Container(validate, "Проверка качества", "Python", "Проверки D-01…D-09")
+  Container(mlflow, "MLflow", "Tracking, Registry", "Версии моделей")
+  ContainerDb(store, "Хранилище данных", "Parquet/CSV, DVC", "Порции, признаки, прогнозы")
+  Container(prep, "Подготовка данных\nи признаков", "pandas, sklearn", "Очистка и признаки")
+  Container(score, "Пакетный скоринг", "Python", "Вероятности и ранги")
+  Container(panel, "Панель показателей", "Streamlit", "Значения и динамика")
+  Container(api, "API прогноза", "FastAPI", "Прогноз по клиенту")
 }
 
-' Подсказки размещения: пары в одном ряду, связи только между рядами
-' (smetana не строит подписанные рёбра внутри одного ряда).
-Lay_R(crm, macro)
-Lay_R(prep, train)
-Lay_R(api, score)
-Lay_R(store, mlflow)
-Lay_R(monitor, panel)
+' Ряды задаются невидимыми связями сверху (Lay_D) и направлением связей
+' (Rel_U — цель выше). Подписанные связи идут только между рядами:
+' smetana не строит подписанные рёбра внутри одного ряда.
+Lay_R(macro, crm)
+Lay_D(macro, train)
+Lay_D(crm, monitor)
+Lay_D(store, panel)
+Lay_D(panel, api)
 
-Rel(crm, ingest, "Порции, итоги звонков")
-Rel(macro, ingest, "Макропоказатели")
+Rel(crm, ingest, "Порции, итоги")
+Rel(macro, ingest, "Показатели")
 Rel(ingest, validate, "Порция")
-Rel(validate, prep, "Проверенные данные")
+Rel(validate, prep, "Данные")
 Rel(prep, score, "Признаки")
-Rel(prep, store, "Признаки, параметры")
-Rel(score, store, "Вероятности\nи ранги")
-Rel(score, mlflow, "Загружает\nмодель")
-Rel(train, store, "Читает\nпризнаки")
-Rel(train, mlflow, "Эксперименты,\nмодели")
-Rel(api, mlflow, "Загружает\nмодель")
-Rel(api, store, "Параметры\nпреобразований")
-Rel_U(monitor, store, "Предсказания и метки; витрина")
-Rel_U(panel, store, "Читает витрину")
+Rel_U(prep, store, "Признаки,\nпараметры")
+Rel(train, mlflow, "Модели")
+Rel(train, store, "Признаки")
+Rel_U(score, mlflow, "Модель")
+Rel_U(score, store, "Вероятности")
+Rel(monitor, store, "Метки, витрина")
+Rel_U(panel, store, "Витрина")
+Rel_U(api, mlflow, "Модель")
+Rel_U(api, store, "Параметры")
 Rel_U(store, crm, "Список обзвона")
-Rel(crm, api, "Запрос прогноза\nпо клиенту")
 @enduml
