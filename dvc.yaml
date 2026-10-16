@@ -59,3 +59,13 @@ stages:
           cache: false
       - report_assets/pr2/validate_out.txt:
           cache: false
+  kpi:
+    cmd: uv run python scripts/kpi.py
+    deps:
+      - scripts/kpi.py
+      - src/bank_marketing/stats.py
+      - data/initial
+      - data/incoming
+    outs:
+      - report_assets/pr2/kpi_out.txt:
+          cache: false

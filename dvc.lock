@@ -149,3 +149,29 @@ stages:
       md5: 67b9720253ebc928a7449209006889b7.dir
       size: 15871
       nfiles: 5
+  kpi:
+    cmd: uv run python scripts/kpi.py
+    deps:
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: scripts/kpi.py
+      hash: md5
+      md5: 5b38b125d7eff0bc354edc00edf395b0
+      size: 2223
+    - path: src/bank_marketing/stats.py
+      hash: md5
+      md5: 569a4ac7a8218c5b387dbc9785ce5134
+      size: 3190
+    outs:
+    - path: report_assets/pr2/kpi_out.txt
+      hash: md5
+      md5: 6d94b5f3162e56fb78cdbc30b62a63cd
+      size: 1150
