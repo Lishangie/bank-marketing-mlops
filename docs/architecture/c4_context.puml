@@ -1,0 +1,23 @@
+@startuml c4_context
+!pragma layout smetana
+!include <C4/C4_Context>
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+LAYOUT_TOP_DOWN()
+HIDE_STEREOTYPE()
+
+Person(manager, "Руководитель кампании", "Запускает обработку волны,\nсмотрит показатели,\nполучает список обзвона")
+Person(mle, "ML-инженер", "Обучает модели,\nследит за дрейфом,\nпереобучает")
+
+System(system, "Система прогноза отклика", "Ранжирует клиентов\nпо вероятности отклика,\nсчитает ключевые показатели")
+
+System_Ext(crm, "CRM банка", "Клиенты, звонки,\nсписки обзвона")
+System_Ext(macro, "Источник макропоказателей", "Euribor, индексы цен\nи доверия, занятость")
+
+Rel(manager, system, "Запускает обработку,\nсмотрит показатели,\nполучает список обзвона")
+Rel(mle, system, "Обучает, отслеживает\nдрейф, переобучает")
+Rel(crm, system, "Порции клиентов, итоги звонков,\nзапрос прогноза по клиенту")
+Rel(system, crm, "Список обзвона,\nпрогноз по клиенту")
+Rel(macro, system, "Макропоказатели")
+@enduml

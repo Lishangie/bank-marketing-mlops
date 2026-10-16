@@ -1,0 +1,54 @@
+@startuml use_cases
+!pragma layout smetana
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #EEF3F8
+  BorderColor #3C5A78
+}
+skinparam rectangle {
+  BorderColor #555555
+}
+left to right direction
+
+actor "Руководитель\nкампании" as manager
+actor "ML-инженер" as mle
+actor "CRM банка\n<<система>>" as crm
+
+rectangle "Система прогноза отклика" {
+  usecase "Запустить обработку\nпорции" as run
+  usecase "Проверить качество\nданных" as check
+  usecase "Сформировать\nпризнаки" as feats
+  usecase "Получить\nпредсказания" as predict
+  usecase "Пересчитать\nпоказатели" as kpi
+  usecase "Просмотреть\nпоказатели" as view
+  usecase "Получить список\nобзвона" as calllist
+  usecase "Получить прогноз\nпо клиенту" as single
+  usecase "Передать порцию" as send
+  usecase "Передать итоги\nзвонков" as results
+  usecase "Обучить модель" as train
+  usecase "Зарегистрировать\nмодель" as register
+  usecase "Проанализировать\nдрейф" as drift
+  usecase "Запустить\nпереобучение" as retrain
+}
+
+manager --> run
+manager --> view
+manager --> calllist
+run ..> check : <<include>>
+run ..> feats : <<include>>
+run ..> predict : <<include>>
+run ..> kpi : <<include>>
+
+single <-- crm
+send <-- crm
+results <-- crm
+
+mle --> train
+mle --> register
+mle --> drift
+mle --> retrain
+retrain ..> drift : <<extend>>
+@enduml

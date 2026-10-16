@@ -1,0 +1,46 @@
+@startuml activity_pipeline
+!pragma layout smetana
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam activity {
+  BackgroundColor #EEF3F8
+  BorderColor #3C5A78
+}
+
+|Общие шаги|
+start
+:Загрузка: чтение, типы,
+удаление duration;
+:Проверка качества;
+if (Критическое
+нарушение?) then (да)
+  :Отчёт о проверке;
+  stop
+else (нет)
+endif
+:Очистка: дубликаты, записи
+вне диапазонов, 999 → флаг
+и пусто, редкие категории →
+объединение, неизвестные →
+unknown;
+if (Режим?) then (обучение)
+  |Только обучение|
+  :Оценить параметры
+  преобразований по
+  обучающим данным;
+  :Сохранить параметры;
+else (порция)
+  |Только порция|
+  :Загрузить
+  сохранённые
+  параметры;
+endif
+|Общие шаги|
+:Формирование признаков;
+:Сохранение таблицы
+признаков (Parquet,
+версия DVC);
+stop
+@enduml

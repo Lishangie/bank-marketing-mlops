@@ -27,3 +27,7 @@ Thumbs.db
 
 # Итоговая сводка (содержит хеш последнего коммита)
 report_assets/ИТОГ.md
+
+# Инструменты (plantuml.jar, переносная JDK) — скачиваются, см. README
+/tools/
+/docs/architecture/png/

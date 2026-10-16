@@ -1,0 +1,50 @@
+@startuml c4_container
+!pragma layout smetana
+!include <C4/C4_Container>
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+LAYOUT_TOP_DOWN()
+HIDE_STEREOTYPE()
+
+System_Ext(crm, "CRM банка")
+System_Ext(macro, "Источник макропоказателей")
+
+Boundary(system, "Система прогноза отклика") {
+  Container(ingest, "Приём порций", "Python, стадия DVC", "Читает порцию, приводит типы")
+  Container(validate, "Проверка качества", "Python", "Требования D-01…D-08, отчёт о проверке")
+  Container(prep, "Подготовка данных и признаков", "pandas, scikit-learn", "Очистка, признаки,\nпараметры преобразований")
+  Container(score, "Пакетный скоринг", "Python", "Вероятности и ранги\nпо порции")
+  ContainerDb(store, "Хранилище данных", "Parquet/CSV + DVC", "Исходные данные, порции,\nпризнаки, предсказания,\nвитрина показателей")
+  Container(train, "Обучение моделей", "CatBoost, scikit-learn")
+  Container(mlflow, "MLflow", "Tracking, Model Registry", "Эксперименты\nи версии моделей")
+  Container(api, "API прогноза", "FastAPI", "Прогноз по одному\nклиенту")
+  Container(monitor, "Расчёт показателей\nи мониторинг", "Python, Evidently", "Показатели, дрейф")
+  Container(panel, "Панель показателей", "Streamlit", "Текущие значения\nи динамика")
+}
+
+' Подсказки размещения: пары в одном ряду, связи только между рядами
+' (smetana не строит подписанные рёбра внутри одного ряда).
+Lay_R(crm, macro)
+Lay_R(prep, train)
+Lay_R(api, score)
+Lay_R(store, mlflow)
+Lay_R(monitor, panel)
+
+Rel(crm, ingest, "Порции, итоги звонков")
+Rel(macro, ingest, "Макропоказатели")
+Rel(ingest, validate, "Порция")
+Rel(validate, prep, "Проверенные данные")
+Rel(prep, score, "Признаки")
+Rel(prep, store, "Признаки, параметры")
+Rel(score, store, "Вероятности\nи ранги")
+Rel(score, mlflow, "Загружает\nмодель")
+Rel(train, store, "Читает\nпризнаки")
+Rel(train, mlflow, "Эксперименты,\nмодели")
+Rel(api, mlflow, "Загружает\nмодель")
+Rel(api, store, "Параметры\nпреобразований")
+Rel_U(monitor, store, "Предсказания и метки; витрина")
+Rel_U(panel, store, "Читает витрину")
+Rel_U(store, crm, "Список обзвона")
+Rel(crm, api, "Запрос прогноза\nпо клиенту")
+@enduml

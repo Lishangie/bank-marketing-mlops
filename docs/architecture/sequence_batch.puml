@@ -1,0 +1,39 @@
+@startuml sequence_batch
+!pragma layout smetana
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+hide footbox
+
+participant "CRM" as crm
+participant "Приём\nпорций" as ingest
+participant "Проверка\nкачества" as validate
+participant "Подготовка\nпризнаков" as prep
+participant "Пакетный\nскоринг" as score
+participant "MLflow" as mlflow
+database "Хранилище" as store
+participant "Расчёт\nпоказателей" as monitor
+participant "Панель" as panel
+
+crm -> ingest : порция
+ingest -> store : сохранить порцию\n(версия DVC)
+ingest -> validate : проверить
+alt критическое нарушение (D-01, D-02)
+  validate -> store : отчёт о проверке,\nобработка остановлена
+else иначе
+  validate -> prep : очищенные\nданные
+  prep -> store : загрузить параметры\nпреобразований
+  prep -> score : признаки
+  score -> mlflow : загрузить\nрабочую\nверсию\nмодели
+  score -> store : вероятности\nи ранги
+  store -> crm : список обзвона
+  monitor <- store : предсказания\nи метки\nпрошлых волн
+  monitor -> store : витрина\nпоказателей
+  opt PSI > 0,2
+    monitor -> panel : предупреждение\nо дрейфе
+  end
+  panel -> store : прочитать витрину
+end
+@enduml
