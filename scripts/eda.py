@@ -30,44 +30,24 @@ from bank_marketing.config import (
     TARGET,
 )
 from bank_marketing.data import load_raw
-from bank_marketing.periods import MONTHS, add_periods
-from bank_marketing.plotting import C_ACCENT, C_NO, C_YES, CM, LABEL_BOX, WIDTH, apply_style
+from bank_marketing.periods import add_periods
+from bank_marketing.plotting import (
+    C_ACCENT,
+    C_NO,
+    C_YES,
+    CLIP_99,
+    CM,
+    LABEL_BOX,
+    RU,
+    WIDTH,
+    apply_style,
+    category_order,
+)
 from bank_marketing.plotting import save as save_fig
+from bank_marketing.report import wrap_items
 
 MAX_LINES = 150
 WRAP = 90
-
-RU = {
-    "age": "Возраст, лет",
-    "duration": "Длительность звонка, с",
-    "campaign": "Число контактов в кампании",
-    "pdays": "Дней с прошлого контакта",
-    "previous": "Число прошлых контактов",
-    "emp.var.rate": "Изменение занятости, %",
-    "cons.price.idx": "Индекс потребительских цен",
-    "cons.conf.idx": "Индекс потребит. доверия",
-    "euribor3m": "Ставка Euribor 3M, %",
-    "nr.employed": "Число занятых, тыс.",
-    "job": "Род занятий",
-    "education": "Образование",
-    "contact": "Тип связи",
-    "month": "Месяц контакта",
-    "day_of_week": "День недели",
-    "poutcome": "Итог прошлой\nкампании",
-}
-DAYS = ["mon", "tue", "wed", "thu", "fri"]
-EDU = [
-    "illiterate",
-    "basic.4y",
-    "basic.6y",
-    "basic.9y",
-    "high.school",
-    "professional.course",
-    "university.degree",
-    "unknown",
-]
-# Признаки, у которых ось X обрезается по 99-му перцентилю (длинный хвост).
-CLIP_99 = {"duration", "campaign"}
 
 apply_style(font_size=9, tick_size=8.5)
 
@@ -130,16 +110,6 @@ def fig_numeric(df: pd.DataFrame) -> None:
         ax.yaxis.set_major_formatter(PercentFormatter(1, decimals=0))
     axes.flat[0].legend(frameon=False)
     save(fig, "рис_3_2.png")
-
-
-def category_order(col: str, rates: pd.Series) -> list:
-    if col == "month":
-        return [m for m in MONTHS if m in rates.index]
-    if col == "day_of_week":
-        return DAYS
-    if col == "education":
-        return [e for e in EDU if e in rates.index]
-    return rates.sort_values().index.tolist()
 
 
 def fig_categorical(df: pd.DataFrame) -> None:
@@ -261,20 +231,6 @@ def pkg_version(name: str) -> str:
         return version(name)
     except PackageNotFoundError:
         return "не установлен"
-
-
-def wrap_items(items: list[str], indent: str = "  ", cont: str | None = None) -> list[str]:
-    """Склеивает элементы через «; », перенося строку только между элементами."""
-    cont = indent if cont is None else cont
-    lines, cur = [], indent
-    for i, item in enumerate(items):
-        piece = item + (";" if i < len(items) - 1 else "")
-        if cur.strip() and len(cur) + 1 + len(piece) > WRAP:
-            lines.append(cur.rstrip())
-            cur = cont
-        cur += ("" if not cur.strip() else " ") + piece
-    lines.append(cur.rstrip())
-    return lines
 
 
 def main() -> None:

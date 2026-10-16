@@ -168,7 +168,7 @@ def fig_split(df: pd.DataFrame) -> None:
     ax2.spines["right"].set_visible(True)
     ax2.plot(x, per["rate"], color=C_MEAN, marker="o", ms=3, lw=1.4)
     ax2.set_ylabel("Доля отклика")
-    ax2.yaxis.set_major_formatter(pct_formatter(0))
+    ax2.yaxis.set_major_formatter(pct_formatter())
     ax2.set_ylim(0, 1)
 
     # Границы и подписи частей над областью графика.

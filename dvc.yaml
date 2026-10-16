@@ -4,6 +4,7 @@ stages:
     deps:
       - scripts/split_data.py
       - src/bank_marketing/periods.py
+      - src/bank_marketing/plotting.py
       - data/raw/bank-additional-full.csv
     params:
       - split
@@ -15,4 +16,31 @@ stages:
       - report_assets/pr2/img/рис_1_1.png:
           cache: false
       - reports/figures/pr2/рис_1_1.png:
+          cache: false
+  eda_initial:
+    cmd: uv run python scripts/eda_initial.py
+    deps:
+      - scripts/eda_initial.py
+      - src/bank_marketing/stats.py
+      - src/bank_marketing/plotting.py
+      - data/initial
+      - data/incoming
+    outs:
+      - report_assets/pr2/eda_initial_out.txt:
+          cache: false
+      - report_assets/pr2/img/рис_1_2.png:
+          cache: false
+      - report_assets/pr2/img/рис_1_3.png:
+          cache: false
+      - report_assets/pr2/img/рис_1_4.png:
+          cache: false
+      - report_assets/pr2/img/рис_1_5.png:
+          cache: false
+      - reports/figures/pr2/рис_1_2.png:
+          cache: false
+      - reports/figures/pr2/рис_1_3.png:
+          cache: false
+      - reports/figures/pr2/рис_1_4.png:
+          cache: false
+      - reports/figures/pr2/рис_1_5.png:
           cache: false

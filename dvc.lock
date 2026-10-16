@@ -9,12 +9,16 @@ stages:
       size: 5834924
     - path: scripts/split_data.py
       hash: md5
-      md5: e18d176dd942dbaa6ab6876fa2e4aca8
-      size: 10655
+      md5: 29cdaadbfbda392f4f5a58b904646fb7
+      size: 10408
     - path: src/bank_marketing/periods.py
       hash: md5
       md5: 87eb9ec9a306a9af89254a86a90e6a31
       size: 2285
+    - path: src/bank_marketing/plotting.py
+      hash: md5
+      md5: 5d213a4a039d6971a7a47c55708ca1ab
+      size: 5030
     params:
       params.yaml:
         split:
@@ -44,3 +48,65 @@ stages:
       hash: md5
       md5: 5286fa9f498ea4091906a4a9557bb78d
       size: 120047
+  eda_initial:
+    cmd: uv run python scripts/eda_initial.py
+    deps:
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: scripts/eda_initial.py
+      hash: md5
+      md5: ce5ace389c30093b5f6326e3a8ee1132
+      size: 21048
+    - path: src/bank_marketing/plotting.py
+      hash: md5
+      md5: 5d213a4a039d6971a7a47c55708ca1ab
+      size: 5030
+    - path: src/bank_marketing/stats.py
+      hash: md5
+      md5: 7387d7f424c65d586995f4dbb2942261
+      size: 2895
+    outs:
+    - path: report_assets/pr2/eda_initial_out.txt
+      hash: md5
+      md5: db400479b512a0006d782b514794c4f5
+      size: 12629
+    - path: report_assets/pr2/img/рис_1_2.png
+      hash: md5
+      md5: c4b39670d0ddf5a4715243ed20f360f4
+      size: 172975
+    - path: report_assets/pr2/img/рис_1_3.png
+      hash: md5
+      md5: 12bb4a179ee5a24ba1992f4c2561260a
+      size: 190745
+    - path: report_assets/pr2/img/рис_1_4.png
+      hash: md5
+      md5: 098368957be07bc1f74322da9ec3a8c5
+      size: 132462
+    - path: report_assets/pr2/img/рис_1_5.png
+      hash: md5
+      md5: 9ed6e65d12002cff029cce75840b9edc
+      size: 113139
+    - path: reports/figures/pr2/рис_1_2.png
+      hash: md5
+      md5: 6785a72c5ba18201672cc124722ea3f1
+      size: 173566
+    - path: reports/figures/pr2/рис_1_3.png
+      hash: md5
+      md5: d8c34ad63895674b414d13d79db92221
+      size: 190007
+    - path: reports/figures/pr2/рис_1_4.png
+      hash: md5
+      md5: 4a29e1b9e79cfacdb32d4b8064a2fb87
+      size: 132816
+    - path: reports/figures/pr2/рис_1_5.png
+      hash: md5
+      md5: 9ed6e65d12002cff029cce75840b9edc
+      size: 113139

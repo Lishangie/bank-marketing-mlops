@@ -8,7 +8,10 @@ import matplotlib
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
+import pandas as pd
 from matplotlib.ticker import FuncFormatter, ScalarFormatter
+
+from bank_marketing.periods import MONTHS
 
 CM = 1 / 2.54
 DPI = 200
@@ -16,6 +19,39 @@ WIDTH = 16 * CM
 
 C_NO, C_YES, C_ACCENT, C_MEAN = "#7f93a8", "#d9822b", "#3c5a78", "#b03a2e"
 LABEL_BOX = {"boxstyle": "square,pad=0.1", "facecolor": "white", "edgecolor": "none", "alpha": 0.85}
+
+RU = {
+    "age": "Возраст, лет",
+    "duration": "Длительность звонка, с",
+    "campaign": "Число контактов в кампании",
+    "pdays": "Дней с прошлого контакта",
+    "previous": "Число прошлых контактов",
+    "emp.var.rate": "Изменение занятости, %",
+    "cons.price.idx": "Индекс потребительских цен",
+    "cons.conf.idx": "Индекс потребит. доверия",
+    "euribor3m": "Ставка Euribor 3M, %",
+    "nr.employed": "Число занятых, тыс.",
+    "job": "Род занятий",
+    "education": "Образование",
+    "default": "Просрочка по кредиту",
+    "contact": "Тип связи",
+    "month": "Месяц контакта",
+    "day_of_week": "День недели",
+    "poutcome": "Итог прошлой\nкампании",
+}
+DAYS = ["mon", "tue", "wed", "thu", "fri"]
+EDU = [
+    "illiterate",
+    "basic.4y",
+    "basic.6y",
+    "basic.9y",
+    "high.school",
+    "professional.course",
+    "university.degree",
+    "unknown",
+]
+# Признаки, у которых ось X обрезается по 99-му перцентилю (длинный хвост).
+CLIP_99 = {"duration", "campaign"}
 
 
 def apply_style(font_size: float = 9, tick_size: float = 9) -> None:
@@ -70,9 +106,23 @@ def comma_axes(*axes, x: bool = True, y: bool = True) -> None:
             ax.yaxis.set_major_formatter(CommaFormatter(useOffset=False))
 
 
-def pct_formatter(decimals: int = 0) -> FuncFormatter:
+def pct_formatter(decimals: int | None = None) -> FuncFormatter:
+    """Подписи оси в процентах; по умолчанию до 1 знака без лишнего «,0»."""
+    if decimals is None:
+        return FuncFormatter(lambda v, _: pct(v, 1).replace(",0%", "%"))
     return FuncFormatter(lambda v, _: pct(v, decimals))
 
 
 def thousands_formatter() -> FuncFormatter:
     return FuncFormatter(lambda v, _: num(v, 0))
+
+
+def category_order(col: str, rates: pd.Series) -> list:
+    """Порядок значений: месяцы, дни и образование — естественный, прочие — по доле отклика."""
+    if col == "month":
+        return [m for m in MONTHS if m in rates.index]
+    if col == "day_of_week":
+        return DAYS
+    if col == "education":
+        return [e for e in EDU if e in rates.index]
+    return rates.sort_values().index.tolist()
