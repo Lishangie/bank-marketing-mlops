@@ -142,11 +142,11 @@ stages:
       size: 3067
     - path: report_assets/pr2/validate_out.txt
       hash: md5
-      md5: 6b794476c2a9226e8eda5813dba49543
-      size: 5328
+      md5: 4f90aa35404a7940cd7525d34c7dbdcf
+      size: 5330
     - path: reports/validation
       hash: md5
-      md5: 67b9720253ebc928a7449209006889b7.dir
+      md5: cc4ae6b09714f7341a5804abb19cd3f3.dir
       size: 15871
       nfiles: 5
   kpi:
