@@ -79,3 +79,72 @@ stages:
     outs:
       - report_assets/pr2/features_out.txt:
           cache: false
+  features:
+    cmd: uv run python scripts/build_features.py
+    deps:
+      - scripts/build_features.py
+      - src/bank_marketing/features.py
+      - src/bank_marketing/validation.py
+      - src/bank_marketing/experiments.py
+      - models/reference/data_reference.json
+      - data/initial
+      - data/incoming
+    params:
+      - train.test_from
+    outs:
+      - data/processed/train.parquet
+      - data/processed/test.parquet
+      - data/processed/batch_01.parquet
+      - data/processed/batch_02.parquet
+      - data/processed/batch_03.parquet
+      - data/processed/batch_04.parquet
+      - models/reference/feature_params.json:
+          cache: false
+      - report_assets/pr3/features_out.txt:
+          cache: false
+  experiments:
+    cmd: uv run python scripts/train_experiments.py
+    deps:
+      - scripts/train_experiments.py
+      - src/bank_marketing/features.py
+      - src/bank_marketing/models.py
+      - src/bank_marketing/experiments.py
+      - src/bank_marketing/validation.py
+      - models/reference/data_reference.json
+      - data/initial
+    params:
+      - train
+    outs:
+      - reports/experiments.csv:
+          cache: false
+      - reports/selection.json:
+          cache: false
+      - report_assets/pr3/experiments_out.txt:
+          cache: false
+      - report_assets/pr3/img/рис_1_1.png:
+          cache: false
+      - report_assets/pr3/img/рис_3_1.png:
+          cache: false
+      - report_assets/pr3/img/рис_3_2.png:
+          cache: false
+      - report_assets/pr3/img/рис_3_3.png:
+          cache: false
+      - reports/figures/pr3:
+          cache: false
+  train:
+    cmd: uv run python scripts/train_final.py
+    deps:
+      - scripts/train_final.py
+      - reports/selection.json
+      - src/bank_marketing/features.py
+      - src/bank_marketing/models.py
+      - data/initial
+    params:
+      - train.test_from
+      - train.seed
+    outs:
+      - models/model_v1.joblib
+      - models/model_v1.json:
+          cache: false
+      - report_assets/pr3/train_out.txt:
+          cache: false

@@ -7,7 +7,7 @@
 ```powershell
 uv sync                  # окружение Python 3.12 из uv.lock
 uv run dvc pull          # данные из DVC-хранилища (../dvc-storage)
-uv run dvc repro         # конвейер: split → eda_initial, validate, kpi, feature_candidates
+uv run dvc repro         # конвейер: split → eda_initial, validate, kpi, feature_candidates → features, experiments → train
 uv run python scripts/eda.py   # EDA всего набора (ПР1): рисунки и report_assets/eda_out.txt
 ```
 
@@ -20,6 +20,9 @@ uv run python scripts/eda.py   # EDA всего набора (ПР1): рисун
 | `validate` | `scripts/validate.py` | `report_assets/pr2/validate_out.txt`, `reports/validation/*.json`, `models/reference/data_reference.json` |
 | `kpi` | `scripts/kpi.py` | `report_assets/pr2/kpi_out.txt` |
 | `feature_candidates` | `scripts/feature_candidates.py` | `report_assets/pr2/features_out.txt` |
+| `features` (ПР3) | `scripts/build_features.py` | `data/processed/*.parquet`, `models/reference/feature_params.json`, `report_assets/pr3/features_out.txt` |
+| `experiments` (ПР3) | `scripts/train_experiments.py` | `reports/experiments.csv`, `reports/selection.json`, `report_assets/pr3/experiments_out.txt`, рисунки 1.1, 3.1–3.3 |
+| `train` (ПР3) | `scripts/train_final.py` | `models/model_v1.joblib`, `models/model_v1.json`, `report_assets/pr3/train_out.txt` |
 
 Замер времени проверки качества (вне конвейера: зависит от машины и нагрузки):
 `uv run python scripts/benchmark.py` → `report_assets/pr2/benchmark_out.txt`
@@ -29,6 +32,18 @@ uv run python scripts/eda.py   # EDA всего набора (ПР1): рисун
 
 Docker: `docker build -t bank-marketing .`, затем
 `docker run --rm -v ${PWD}/data:/app/data -v ${PWD}/report_assets:/app/report_assets bank-marketing`.
+
+## Модели (ПР3)
+
+Пайплайн признаков — `src/bank_marketing/features.py`: `prepare(path)` превращает любой файл
+(исходную часть или порцию) в данные для модели, `make_pipeline(model)` объединяет новые признаки,
+предобработку и модель в один `Pipeline`. Проверить на порции:
+`uv run python -m bank_marketing.features data/incoming/batch_01.csv`.
+
+Эксперименты (стадия `experiments`, около 5 минут) пишутся в `reports/experiments.csv` и в MLflow.
+Просмотр: `uv run mlflow ui --backend-store-uri sqlite:///mlruns/mlflow.db`, эксперимент
+`pr3-model-selection`. Итоговая модель — `models/model_v1.joblib` (под DVC) с описанием
+`models/model_v1.json`, в реестре MLflow — `bank-marketing-response`, версия 1.
 
 ## Диаграммы
 

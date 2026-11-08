@@ -1,0 +1,56 @@
+{
+  "version": "v1",
+  "trained": "2026-11-08",
+  "git_commit": "b3b2644",
+  "data": "data/initial/initial.csv, обучающая выборка 2008-05…2008-07 (до 2008-08)",
+  "data_md5": "eb23657b58d5ae0dd37f6618f0484483",
+  "rows": 18817,
+  "positive_share": 0.04437,
+  "algorithm": "CatBoost (после подбора)",
+  "family": "boosting",
+  "hyperparameters": {
+    "depth": 3,
+    "iterations": 500,
+    "l2_leaf_reg": 3,
+    "learning_rate": 0.03
+  },
+  "features": {
+    "numeric": [
+      "age",
+      "campaign_capped",
+      "previous",
+      "had_prev_contact",
+      "cons.price.idx",
+      "cons.conf.idx",
+      "macro_pc1"
+    ],
+    "categorical": [
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "contact",
+      "month",
+      "day_of_week",
+      "poutcome",
+      "age_group",
+      "job_group"
+    ]
+  },
+  "cv": {
+    "scheme": "TimeSeriesSplit(5)",
+    "pr_auc": 0.05728,
+    "pr_auc_std": 0.0164,
+    "roc_auc": 0.53142,
+    "lift_at_10": 1.23761,
+    "baseline_pr_auc": 0.04853316326530612
+  },
+  "environment": {
+    "python": "3.12.12",
+    "scikit-learn": "1.9.1",
+    "catboost": "1.2.10"
+  },
+  "reproduce": "uv run dvc repro train"
+}

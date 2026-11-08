@@ -1,0 +1,18 @@
+Итоговая модель ПР3
+  алгоритм: CatBoost (после подбора); гиперпараметры: {'depth': 3, 'iterations': 500, 'l2_leaf_reg': 3, 'learning_rate': 0.03}
+  обучающая выборка: 18817 записей, доля отклика 4.44%
+  PR-AUC по КВ 0.0573 ± 0.0164; базовое 0.0485
+  файлы: models/model_v1.joblib (171749 байт), models/model_v1.json
+  загрузка из файла даёт те же вероятности: да
+  MLflow: запуск a38c4d30, реестр bank-marketing-response, версия 1
+  важность признаков CatBoost (PredictionValuesChange), 10 наибольших:
+    macro_pc1                     20.17
+    campaign_capped               18.04
+    age                           11.94
+    contact                        9.76
+    cons.conf.idx                  7.93
+    job_group                      6.06
+    housing                        4.43
+    day_of_week                    3.50
+    marital                        3.19
+    job                            3.02

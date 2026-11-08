@@ -201,3 +201,188 @@ stages:
       hash: md5
       md5: 9bf131a7359251091911eab3e4d2b9f5
       size: 3630
+  features:
+    cmd: uv run python scripts/build_features.py
+    deps:
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: models/reference/data_reference.json
+      hash: md5
+      md5: 3a503920d138604bde00ccf579fda5e6
+      size: 3138
+    - path: scripts/build_features.py
+      hash: md5
+      md5: 7b222fc6170229ed720e365dc2ae7ed7
+      size: 4588
+    - path: src/bank_marketing/experiments.py
+      hash: md5
+      md5: 6f434786ceb95fe8f9f03078ecd0755f
+      size: 6985
+    - path: src/bank_marketing/features.py
+      hash: md5
+      md5: c848b9ce50c02b3d8196129a6a8e9adf
+      size: 9537
+    - path: src/bank_marketing/validation.py
+      hash: md5
+      md5: 9e5edf4b7a630bc37c2f13f6bfd957d0
+      size: 13090
+    params:
+      params.yaml:
+        train.test_from: 2008-08
+    outs:
+    - path: data/processed/batch_01.parquet
+      hash: md5
+      md5: 1cbbc9441997424aff4b98d02c829c97
+      size: 51996
+    - path: data/processed/batch_02.parquet
+      hash: md5
+      md5: d45ff992ace7f16c41f379b51e9106f4
+      size: 46163
+    - path: data/processed/batch_03.parquet
+      hash: md5
+      md5: 56a3719eafdb583e642f2b44e972747d
+      size: 75568
+    - path: data/processed/batch_04.parquet
+      hash: md5
+      md5: 386d773b86cd5fe9fdbe25617fe6010c
+      size: 76494
+    - path: data/processed/test.parquet
+      hash: md5
+      md5: 7e972219b585a878ee3a2ad271dce404
+      size: 66981
+    - path: data/processed/train.parquet
+      hash: md5
+      md5: 6cb42f3f8758047b5219e03569dec61e
+      size: 203051
+    - path: models/reference/feature_params.json
+      hash: md5
+      md5: c0f2bf230ba9b23175a18d2cb156d9ac
+      size: 454
+    - path: report_assets/pr3/features_out.txt
+      hash: md5
+      md5: d547795d05d9c5e08e5ec1b17619ec98
+      size: 1705
+  experiments:
+    cmd: uv run python scripts/train_experiments.py
+    deps:
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: models/reference/data_reference.json
+      hash: md5
+      md5: 3a503920d138604bde00ccf579fda5e6
+      size: 3138
+    - path: scripts/train_experiments.py
+      hash: md5
+      md5: c3c2ae33c5a81cbd9a7709571f568c32
+      size: 27781
+    - path: src/bank_marketing/experiments.py
+      hash: md5
+      md5: 6f434786ceb95fe8f9f03078ecd0755f
+      size: 6985
+    - path: src/bank_marketing/features.py
+      hash: md5
+      md5: c848b9ce50c02b3d8196129a6a8e9adf
+      size: 9537
+    - path: src/bank_marketing/models.py
+      hash: md5
+      md5: 9c01ad6b59ab3a8e99a0811023fd0dc7
+      size: 2090
+    - path: src/bank_marketing/validation.py
+      hash: md5
+      md5: 9e5edf4b7a630bc37c2f13f6bfd957d0
+      size: 13090
+    params:
+      params.yaml:
+        train:
+          test_from: 2008-08
+          cv_splits: 5
+          top_k: 0.1
+          seed: 23
+          select_delta: 0.005
+          select_min_folds: 4
+    outs:
+    - path: report_assets/pr3/experiments_out.txt
+      hash: md5
+      md5: 19ebc3436f3fde790fc19b0e3cad83b7
+      size: 11793
+    - path: report_assets/pr3/img/рис_1_1.png
+      hash: md5
+      md5: 57300fcf572833b081d4597fafce963d
+      size: 46544
+    - path: report_assets/pr3/img/рис_3_1.png
+      hash: md5
+      md5: 0908ef5867b516601a6620a9165df15a
+      size: 68545
+    - path: report_assets/pr3/img/рис_3_2.png
+      hash: md5
+      md5: 8850654b43ab90e97a79dd0b3038906d
+      size: 53146
+    - path: report_assets/pr3/img/рис_3_3.png
+      hash: md5
+      md5: 43cab5d78d81f0a2563e8d4dd0c6862e
+      size: 93638
+    - path: reports/experiments.csv
+      hash: md5
+      md5: 8c9cc93e04760991ce10dc02f4fe6c12
+      size: 17462
+    - path: reports/figures/pr3
+      hash: md5
+      md5: 23d7f5789c0198de03a4de9e6bdeec1c.dir
+      size: 261873
+      nfiles: 4
+    - path: reports/selection.json
+      hash: md5
+      md5: 724d67f353688ed6e4ecb6262e3d0a6d
+      size: 391
+  train:
+    cmd: uv run python scripts/train_final.py
+    deps:
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: reports/selection.json
+      hash: md5
+      md5: 724d67f353688ed6e4ecb6262e3d0a6d
+      size: 391
+    - path: scripts/train_final.py
+      hash: md5
+      md5: 9e03fc1012ac7d3e26cb1aa6959bb119
+      size: 7673
+    - path: src/bank_marketing/features.py
+      hash: md5
+      md5: c848b9ce50c02b3d8196129a6a8e9adf
+      size: 9537
+    - path: src/bank_marketing/models.py
+      hash: md5
+      md5: 9c01ad6b59ab3a8e99a0811023fd0dc7
+      size: 2090
+    params:
+      params.yaml:
+        train.seed: 23
+        train.test_from: 2008-08
+    outs:
+    - path: models/model_v1.joblib
+      hash: md5
+      md5: d9fd111ca1285c3bd5bbcc8362ce8e86
+      size: 171749
+    - path: models/model_v1.json
+      hash: md5
+      md5: 71be2e5b2af3c9e42a58d96da659fccd
+      size: 1288
+    - path: report_assets/pr3/train_out.txt
+      hash: md5
+      md5: 6792f42766b4992585d639e7b133e6e3
+      size: 1107

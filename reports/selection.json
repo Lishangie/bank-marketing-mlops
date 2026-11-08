@@ -1,0 +1,17 @@
+{
+  "model": "CatBoost (после подбора)",
+  "family": "boosting",
+  "params": {
+    "depth": 3,
+    "iterations": 500,
+    "l2_leaf_reg": 3,
+    "learning_rate": 0.03
+  },
+  "feature_set": "new",
+  "cv_pr_auc": 0.05728,
+  "cv_pr_auc_std": 0.0164,
+  "cv_roc_auc": 0.53142,
+  "cv_lift_k": 1.23761,
+  "cv_recall_k": 0.12392,
+  "baseline_pr_auc": 0.04853316326530612
+}

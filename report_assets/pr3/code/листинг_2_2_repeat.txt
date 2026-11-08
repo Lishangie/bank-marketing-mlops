@@ -1,0 +1,12 @@
+$ uv run python scripts/build_features.py
+...
+Проверка повторяемости (два запуска подряд):
+  таблицы совпадают: да
+  MD5 файлов совпадают: да (7 файлов)
+    train: cb8bbef21bbb84efbd394b78b25f0986
+    test: d6298dd3da338d6a3b0de65ecd10854a
+    batch_01: 311eaf0dd17580bf9c0b072e46d753b2
+    batch_02: 9fae05510ea5d816161880724c5b2c92
+    batch_03: d1396d566bf6013615fd0de4424542e3
+    batch_04: 7f5b841b89a3fe6c07ffa7d770c84fdc
+    feature_params: 5d3f14b8754b51771b647f28333a975f
