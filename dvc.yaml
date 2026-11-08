@@ -148,3 +148,44 @@ stages:
           cache: false
       - report_assets/pr3/train_out.txt:
           cache: false
+  quality:
+    cmd: uv run python scripts/check_quality.py
+    deps:
+      - scripts/check_quality.py
+      - src/bank_marketing/validation.py
+      - models/reference/data_reference.json
+      - data/incoming
+    outs:
+      - reports/quality_demo:
+          cache: false
+      - report_assets/pr4/quality_out.txt:
+          cache: false
+      - report_assets/pr4/code/листинг_4_1_quality.py:
+          cache: false
+  evaluate:
+    cmd: uv run python scripts/evaluate.py
+    deps:
+      - scripts/evaluate.py
+      - scripts/train_experiments.py
+      - src/bank_marketing/evaluation.py
+      - src/bank_marketing/features.py
+      - src/bank_marketing/models.py
+      - models/model_v1.joblib
+      - models/model_v1.json
+      - models/reference/data_reference.json
+      - data/initial
+      - data/incoming
+    params:
+      - train
+      - evaluate
+    outs:
+      - reports/evaluation.json:
+          cache: false
+      - report_assets/pr4/evaluate_out.txt:
+          cache: false
+      - report_assets/pr4/code/листинг_2_1_bootstrap.py:
+          cache: false
+      - report_assets/pr4/img:
+          cache: false
+      - reports/figures/pr4:
+          cache: false

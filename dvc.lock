@@ -386,3 +386,135 @@ stages:
       hash: md5
       md5: 6792f42766b4992585d639e7b133e6e3
       size: 1107
+  quality:
+    cmd: uv run python scripts/check_quality.py
+    deps:
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: models/reference/data_reference.json
+      hash: md5
+      md5: 3a503920d138604bde00ccf579fda5e6
+      size: 3138
+    - path: scripts/check_quality.py
+      hash: md5
+      md5: 6df3a30e0a7787366fb27e9925773363
+      size: 6492
+    - path: src/bank_marketing/validation.py
+      hash: md5
+      md5: 9e5edf4b7a630bc37c2f13f6bfd957d0
+      size: 13090
+    outs:
+    - path: report_assets/pr4/code/листинг_4_1_quality.py
+      hash: md5
+      md5: c4eeafda0ebc71acbee69a4a69952926
+      size: 1688
+    - path: report_assets/pr4/quality_out.txt
+      hash: md5
+      md5: d205dd4a9212171badc6ba66b89cba2d
+      size: 6673
+    - path: reports/quality_demo
+      hash: md5
+      md5: 2aa43e105b68b4d974aba219b7cca749.dir
+      size: 153929
+      nfiles: 3
+  evaluate:
+    cmd: uv run python scripts/evaluate.py
+    deps:
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: models/model_v1.joblib
+      hash: md5
+      md5: d9fd111ca1285c3bd5bbcc8362ce8e86
+      size: 171749
+    - path: models/model_v1.json
+      hash: md5
+      md5: 71be2e5b2af3c9e42a58d96da659fccd
+      size: 1288
+    - path: models/reference/data_reference.json
+      hash: md5
+      md5: 3a503920d138604bde00ccf579fda5e6
+      size: 3138
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: 14e9082fd83ed3e7e7bcdd7b7a9afa40
+      size: 34227
+    - path: scripts/train_experiments.py
+      hash: md5
+      md5: c3c2ae33c5a81cbd9a7709571f568c32
+      size: 27781
+    - path: src/bank_marketing/evaluation.py
+      hash: md5
+      md5: fd0d163d981e3c716092d2a12d07d734
+      size: 11600
+    - path: src/bank_marketing/features.py
+      hash: md5
+      md5: c848b9ce50c02b3d8196129a6a8e9adf
+      size: 9537
+    - path: src/bank_marketing/models.py
+      hash: md5
+      md5: 9c01ad6b59ab3a8e99a0811023fd0dc7
+      size: 2090
+    params:
+      params.yaml:
+        evaluate:
+          bootstrap: 1000
+          seed: 23
+          cost_fp: 150
+          cost_fn: 3000
+          accept:
+            pr_auc_lift: 1.2
+            pr_auc_gain_rule: 0.005
+            lift_k: 1.2
+            roc_auc: 0.55
+          monitor:
+            lift_k: 1.2
+            psi_warn: 0.1
+            psi_alert: 0.25
+            calib_pp: 0.05
+          psi_features:
+          - macro_pc1
+          - cons.conf.idx
+          - campaign_capped
+          - age
+          - contact
+        train:
+          test_from: 2008-08
+          cv_splits: 5
+          top_k: 0.1
+          seed: 23
+          select_delta: 0.005
+          select_min_folds: 4
+    outs:
+    - path: report_assets/pr4/code/листинг_2_1_bootstrap.py
+      hash: md5
+      md5: 6a8d492a3d089e300c0085e8a2231396
+      size: 1616
+    - path: report_assets/pr4/evaluate_out.txt
+      hash: md5
+      md5: 97c3c57d3c3652d0fa83ee8ebd25ac36
+      size: 14074
+    - path: report_assets/pr4/img
+      hash: md5
+      md5: 6d6329f043a2fcc234753dd5aff23f93.dir
+      size: 369557
+      nfiles: 5
+    - path: reports/evaluation.json
+      hash: md5
+      md5: f3ca80e4515dd7f4cc6f9b1f9dce9999
+      size: 6379
+    - path: reports/figures/pr4
+      hash: md5
+      md5: 6d6329f043a2fcc234753dd5aff23f93.dir
+      size: 369557
+      nfiles: 5
