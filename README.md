@@ -23,6 +23,8 @@ uv run python scripts/eda.py   # EDA всего набора (ПР1): рисун
 | `features` (ПР3) | `scripts/build_features.py` | `data/processed/*.parquet`, `models/reference/feature_params.json`, `report_assets/pr3/features_out.txt` |
 | `experiments` (ПР3) | `scripts/train_experiments.py` | `reports/experiments.csv`, `reports/selection.json`, `report_assets/pr3/experiments_out.txt`, рисунки 1.1, 3.1–3.3 |
 | `train` (ПР3) | `scripts/train_final.py` | `models/model_v1.joblib`, `models/model_v1.json`, `report_assets/pr3/train_out.txt` |
+| `quality`, `evaluate` (ПР4) | `scripts/check_quality.py`, `scripts/evaluate.py` | `reports/quality_demo/`, `reports/evaluation.json`, `report_assets/pr4/` |
+| `service` (ПР5) | `scripts/run_service.py` | `data/system/bank.db`, `models/registry/`, `models/current.json`, `report_assets/pr5/service_out.txt` |
 
 Замер времени проверки качества (вне конвейера: зависит от машины и нагрузки):
 `uv run python scripts/benchmark.py` → `report_assets/pr2/benchmark_out.txt`
@@ -44,6 +46,42 @@ Docker: `docker build -t bank-marketing .`, затем
 Просмотр: `uv run mlflow ui --backend-store-uri sqlite:///mlruns/mlflow.db`, эксперимент
 `pr3-model-selection`. Итоговая модель — `models/model_v1.joblib` (под DVC) с описанием
 `models/model_v1.json`, в реестре MLflow — `bank-marketing-response`, версия 1.
+
+## Система: обработка порций, панель, API (ПР5)
+
+Код — `src/bank_marketing/service/` (хранилище `storage.py`, показатели и правила
+`monitoring.py`, сценарий `process_batch.py`, переобучение `retrain.py`, версии `registry.py`),
+панель и API — `app/`, тесты — `tests/`. Пороги и правило замены — `params.yaml` → `service`
+и `evaluate.monitor`.
+
+```powershell
+uv sync
+# 1. новая порция одной командой (повторный запуск той же порции ничего не дублирует)
+uv run python -m bank_marketing.service.process_batch data/incoming/batch_01.csv
+# 2. если панель показала «Сигнал к переобучению» — претендент и решение о замене
+uv run python -m bank_marketing.service.retrain
+# 3. версии моделей, откат и возврат
+uv run python -m bank_marketing.service.registry status
+uv run python -m bank_marketing.service.registry rollback
+uv run python -m bank_marketing.service.registry activate v3
+# 4. панель (http://localhost:8501) и API (http://127.0.0.1:8000/docs) — в двух окнах
+uv run streamlit run app/dashboard.py
+uv run uvicorn app.api:app --port 8000
+# 5. тесты API
+uv run pytest -q
+```
+
+Весь сценарий ПР5 с нуля (испорченные порции, порции 1–4, переобучение, замеры, API, тесты) —
+`uv run dvc repro service` (около 2 минут). Хранилище — `data/system/bank.db` (SQLite: `raw_data`,
+`predictions`, `metrics_history`, `quality`, `alerts`, `runs`, `retrains`), списки обзвона для CRM —
+`data/system/call_lists/`, снимки базы после каждой порции — `data/system/snapshots/`.
+Модели: v1 — `models/model_v1.joblib` (ПР3), новые — `models/registry/model_vN.joblib` с карточкой
+`vN.json` (данные, строки и их MD5, коммит, параметры, метрики сравнения, профиль для PSI);
+действующая версия — `models/current.json`.
+
+Скриншоты панели по снимкам базы: `uv run playwright install chromium`, затем
+`uv run python scripts/screenshots.py` → `report_assets/pr5/img/рис_3_1…3_4.png`.
+Диаграммы ПР5: `uv run python scripts/render_pr5_diagrams.py` → `рис_1_1.png`, `рис_1_2.png`.
 
 ## Диаграммы
 

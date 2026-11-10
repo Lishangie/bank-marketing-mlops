@@ -25,3 +25,16 @@ evaluate:                # ПР4: протокол оценки, зафикси�
     psi_alert: 0.25      # PSI признака выше — переобучение
     calib_pp: 0.05       # |средняя прогнозная − фактическая доля отклика| больше — переобучение
   psi_features: [macro_pc1, cons.conf.idx, campaign_capped, age, contact]
+service:                 # ПР5: система; правила зафиксированы до подачи порций
+  db: data/system/bank.db
+  feature_set: delta     # new + euribor_delta_3m
+  holdout_share: 0.3     # последние 30 % записей порции (по row_id) — для сравнения претендента
+  candidates:            # семейства претендента; LR без балансировки — вероятности откалиброваны
+    lr: {C: 0.1}
+    catboost: {depth: 3, iterations: 500, learning_rate: 0.03, l2_leaf_reg: 3}
+  replace:               # претендент заменяет действующую, если на отложенной части порции
+    pr_auc_tol: 0.005    # PR-AUC не хуже больше чем на 0,005 И |прогноз − факт| меньше
+  kpi_change_pp: 0.05    # изменение доли выше порога или доли отклика больше 5 п. п. — предупреждение
+  out_of_domain_max: 0.05  # доля записей со ставкой вне области обучения модели — переобучение
+  max_batch_seconds: 60  # N-02
+  max_api_ms: 200        # N-03

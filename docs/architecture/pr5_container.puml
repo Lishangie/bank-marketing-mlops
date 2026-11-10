@@ -1,0 +1,50 @@
+@startuml pr5_container
+!include <C4/C4_Container>
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+!$TECHN_FONT_SIZE = 12
+LAYOUT_TOP_DOWN()
+HIDE_STEREOTYPE()
+skinparam nodesep 8
+skinparam ranksep 14
+
+Person(manager, "Руководитель\nкампании")
+Person(mle, "ML-инженер")
+System_Ext(crm, "CRM банка")
+
+Boundary(system, "Система прогноза отклика (ПР5)") {
+  ContainerDb(files, "Версии данных\nи кода", "Git, DVC", "Порции CSV,\nисходная часть")
+  Container(process, "Сценарий\nобновления", "Python,\nprocess_batch", "Проверки, скоринг,\nпоказатели, правила")
+  Container(retrain, "Переобучение", "Python,\nretrain", "Претендент,\nправило замены")
+  ContainerDb(db, "Хранилище", "SQLite,\nbank.db", "Порции, прогнозы,\nистория, журнал")
+  ContainerDb(models, "Реестр\nмоделей", "joblib, JSON", "model_vN, vN.json,\ncurrent.json")
+  Container(panel, "Панель\nпоказателей", "Streamlit,\nпорт 8501", "Карточки, динамика,\nпредупреждения")
+  Container(api, "API прогноза", "FastAPI,\nпорт 8000", "/predict, /metrics,\n/health")
+}
+
+Lay_R(manager, mle)
+Lay_R(mle, crm)
+Lay_D(files, process)
+Lay_R(process, retrain)
+Lay_D(process, db)
+Lay_D(retrain, models)
+Lay_R(db, models)
+Lay_D(db, panel)
+Lay_D(models, api)
+Lay_R(panel, api)
+
+Rel_D(crm, files, "Порция,\nметки")
+Rel_D(mle, process, "Команда\nс файлом порции")
+Rel_D(mle, retrain, "Запуск\nпо сигналу")
+Rel_D(files, process, "CSV")
+Rel_D(process, db, "INSERT OR\nREPLACE")
+Rel(models, process, "Действующая\nмодель")
+Rel_L(retrain, db, "Размеченные\nданные")
+Rel_D(retrain, models, "Новая версия,\nуказатель")
+Rel_U(panel, db, "SQL")
+Rel_U(api, models, "Модель")
+Rel_U(api, db, "Показатели")
+Rel_U(manager, panel, "HTTP")
+Rel_U(crm, api, "HTTP JSON")
+@enduml

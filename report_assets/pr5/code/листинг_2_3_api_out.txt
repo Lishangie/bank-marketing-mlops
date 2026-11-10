@@ -1,0 +1,17 @@
+GET /health
+ -> 200 {"status": "ok", "model_version": "v3", "db": true, "batches": 4}
+POST /predict {"client_id": "C-41188", "period": "2010-11", "age": 74,
+               "job": "retired", "contact": "cellular", "poutcome": "failure",
+               "euribor3m": 1.028, ...}
+ -> 200 {"client_id": "C-41188", "probability": 0.5074,
+         "above_threshold": true, "threshold": 0.048, "model_version": "v3"}
+POST /predict {..., "age": 5, "contact": "pager"}
+ -> 422 age: Input should be greater than or equal to 17;
+        contact: Input should be 'cellular' or 'telephone'
+GET /metrics
+ -> 200 {"batch": "batch_04", "expected_deposits": 262.7387,
+         "above_threshold_share": 1.0, "response_rate": 0.445,
+         "lift_k": 1.1418, ...}
+> uv run pytest -q
+.....                                                       [100%]
+5 passed in 1.82s

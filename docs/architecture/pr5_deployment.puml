@@ -1,0 +1,54 @@
+@startuml pr5_deployment
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam nodesep 20
+skinparam ranksep 30
+skinparam node {
+  BackgroundColor #F4F6F7
+  BorderColor #566573
+}
+skinparam artifact {
+  BackgroundColor #FFFFFF
+  BorderColor #566573
+}
+skinparam database {
+  BackgroundColor #EBF5FB
+  BorderColor #2E86C1
+}
+left to right direction
+
+node "Браузер\nпользователя" as browser
+node "CRM банка" as crm
+
+node "Рабочая станция ML-инженера\n<<Windows 11>>" as ws {
+  node "Среда Python 3.12\n<<uv, .venv>>" as py {
+    artifact "process_batch\n(по команде)" as proc
+    artifact "retrain\n(по сигналу)" as retr
+    artifact "streamlit\napp/dashboard.py" as dash
+    artifact "uvicorn\napp/api.py" as api
+  }
+  node "Каталог проекта\nC:\\CourseWork\\bank-marketing-mlops" as fs {
+    database "data/system/\nbank.db" as db
+    artifact "models/registry/\nmodel_vN.joblib, vN.json" as reg
+    artifact "models/\ncurrent.json" as cur
+    artifact "data/incoming/\nbatch_*.csv" as inc
+    artifact "data/system/\ncall_lists/*.csv" as calls
+  }
+  database "Хранилище DVC\nC:\\CourseWork\\dvc-storage" as dvcs
+}
+node "GitHub\n<<Git, теги pr1–pr5>>" as gh
+
+browser --> dash : HTTP :8501
+crm --> api : HTTP :8000\nJSON
+crm --> inc : выгрузка CSV
+calls --> crm : список обзвона
+proc --> db : SQLite
+proc --> cur : чтение
+retr --> reg : запись
+dash --> db : SQLite
+api --> cur : чтение
+fs --> dvcs : dvc push
+fs --> gh : git push
+@enduml

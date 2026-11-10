@@ -189,3 +189,38 @@ stages:
           cache: false
       - reports/figures/pr4:
           cache: false
+  service:
+    cmd: uv run python scripts/run_service.py
+    deps:
+      - scripts/run_service.py
+      - src/bank_marketing/service
+      - src/bank_marketing/features.py
+      - src/bank_marketing/validation.py
+      - app
+      - tests
+      - data/initial
+      - data/incoming
+      - models/model_v1.joblib
+      - models/model_v1.json
+      - models/reference/data_reference.json
+      - reports/evaluation.json
+      - reports/quality_demo
+    params:
+      - train.top_k
+      - train.seed
+      - train.test_from
+      - train.select_delta
+      - evaluate.monitor
+      - evaluate.psi_features
+      - service
+    outs:
+      - data/system
+      - models/registry
+      - models/current.json:
+          cache: false
+      - report_assets/pr5/service_out.txt:
+          cache: false
+      - report_assets/pr5/service.json:
+          cache: false
+      - report_assets/pr5/img/рис_3_5.png:
+          cache: false

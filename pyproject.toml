@@ -8,6 +8,7 @@ dependencies = [
     "catboost>=1.2.10",
     "dvc>=3.67.1",
     "evidently>=0.7.23",
+    "fastapi>=0.115",
     "matplotlib>=3.11.2",
     "mlflow>=3.16.1",
     "numpy>=2.5.3",
@@ -16,10 +17,15 @@ dependencies = [
     "scikit-learn>=1.9.1",
     "scipy>=1.18.1",
     "seaborn>=0.13.2",
+    "streamlit>=1.40",
+    "uvicorn>=0.32",
 ]
 
 [dependency-groups]
 dev = [
+    "httpx2>=2.16.0",
+    "playwright>=1.65.0",
+    "pytest>=9.2.0",
     "ruff>=0.16.8",
 ]
 
@@ -38,3 +44,7 @@ extend-exclude = ["report_assets"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
