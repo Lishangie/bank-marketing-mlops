@@ -518,3 +518,126 @@ stages:
       md5: 6d6329f043a2fcc234753dd5aff23f93.dir
       size: 369557
       nfiles: 5
+  service:
+    cmd: uv run python scripts/run_service.py
+    deps:
+    - path: app
+      hash: md5
+      md5: c02e9455a3c62a650dfb3882c4894112.dir
+      size: 12816
+      nfiles: 3
+    - path: data/incoming
+      hash: md5
+      md5: 778c938a88363d3cb833810d98499c17.dir
+      size: 2681384
+      nfiles: 4
+    - path: data/initial
+      hash: md5
+      md5: 9f42abc6987503c4fe82a265cf7ed455.dir
+      size: 3802428
+      nfiles: 1
+    - path: models/model_v1.joblib
+      hash: md5
+      md5: d9fd111ca1285c3bd5bbcc8362ce8e86
+      size: 171749
+    - path: models/model_v1.json
+      hash: md5
+      md5: 71be2e5b2af3c9e42a58d96da659fccd
+      size: 1288
+    - path: models/reference/data_reference.json
+      hash: md5
+      md5: 3a503920d138604bde00ccf579fda5e6
+      size: 3138
+    - path: reports/evaluation.json
+      hash: md5
+      md5: f3ca80e4515dd7f4cc6f9b1f9dce9999
+      size: 6379
+    - path: reports/quality_demo
+      hash: md5
+      md5: 2aa43e105b68b4d974aba219b7cca749.dir
+      size: 153929
+      nfiles: 3
+    - path: scripts/run_service.py
+      hash: md5
+      md5: f10ac04eb5d867a45e1a923d0aab9fbd
+      size: 14391
+    - path: src/bank_marketing/features.py
+      hash: md5
+      md5: c848b9ce50c02b3d8196129a6a8e9adf
+      size: 9537
+    - path: src/bank_marketing/service
+      hash: md5
+      md5: 300b827c3484df7fcc15e793cfa4cd83.dir
+      size: 40148
+      nfiles: 7
+    - path: src/bank_marketing/validation.py
+      hash: md5
+      md5: 9e5edf4b7a630bc37c2f13f6bfd957d0
+      size: 13090
+    - path: tests
+      hash: md5
+      md5: 26c05443f750d4b1b4a0cf39b430dc27.dir
+      size: 2952
+      nfiles: 1
+    params:
+      params.yaml:
+        evaluate.monitor:
+          lift_k: 1.2
+          psi_warn: 0.1
+          psi_alert: 0.25
+          calib_pp: 0.05
+        evaluate.psi_features:
+        - macro_pc1
+        - cons.conf.idx
+        - campaign_capped
+        - age
+        - contact
+        service:
+          db: data/system/bank.db
+          feature_set: delta
+          holdout_share: 0.3
+          candidates:
+            lr:
+              C: 0.1
+            catboost:
+              depth: 3
+              iterations: 500
+              learning_rate: 0.03
+              l2_leaf_reg: 3
+          replace:
+            pr_auc_tol: 0.005
+          kpi_change_pp: 0.05
+          out_of_domain_max: 0.05
+          max_batch_seconds: 60
+          max_api_ms: 200
+        train.seed: 23
+        train.select_delta: 0.005
+        train.test_from: 2008-08
+        train.top_k: 0.1
+    outs:
+    - path: data/system
+      hash: md5
+      md5: 690a89990623e6d5200fad6f1fa229e4.dir
+      size: 14878743
+      nfiles: 9
+    - path: models/current.json
+      hash: md5
+      md5: 6726cb7174289f38f7ddd276ce8dea54
+      size: 808
+    - path: models/registry
+      hash: md5
+      md5: 99094fdfb777a5e4fc7270e01dac2b87.dir
+      size: 426680
+      nfiles: 5
+    - path: report_assets/pr5/img/рис_3_5.png
+      hash: md5
+      md5: bbcd05b1f7ece8d3ee3d920a29296de0
+      size: 39245
+    - path: report_assets/pr5/service.json
+      hash: md5
+      md5: f38dc18f66ef0846a0b7bfa0edb005e0
+      size: 16330
+    - path: report_assets/pr5/service_out.txt
+      hash: md5
+      md5: 74ed76a4e3ea390dc916c7bb59ec3a6e
+      size: 9603

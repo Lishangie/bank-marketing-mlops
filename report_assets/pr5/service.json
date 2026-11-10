@@ -25,7 +25,7 @@
    "lift_k": 1.4716,
    "calib_pp": -0.0177,
    "deposits_in_call_list": 28,
-   "duration_s": 0.2175,
+   "duration_s": 0.4659,
    "retrain_signal": 1,
    "alerts": [
     "Проверка качества: D-03, D-08, D-09 (подробности — таблица quality)",
@@ -33,9 +33,9 @@
     "Существенный дрейф: macro_pc1 PSI = 9,66; cons.conf.idx PSI = 17,35; age PSI = 0,30; contact PSI = 1,80",
     "Умеренный дрейф: campaign_capped PSI = 0,18"
    ],
-   "cli_s": 1.5368298999997023,
+   "cli_s": 1.6423068000003695,
    "retrain": {
-    "started_at": "2026-11-10T19:29:14",
+    "started_at": "2026-11-10T19:43:32",
     "current_version": "v1",
     "candidate": "CatBoost",
     "train_rows": 26587,
@@ -50,8 +50,8 @@
     "cand_calib": 0.08117578425428185,
     "decision": "оставить действующую",
     "new_version": null,
-    "duration_s": 15.98,
-    "cli_s": 17.391423153999767
+    "duration_s": 20.29,
+    "cli_s": 21.500926799999434
    }
   },
   "batch_02": {
@@ -79,7 +79,7 @@
    "lift_k": 1.4933,
    "calib_pp": -0.1639,
    "deposits_in_call_list": 85,
-   "duration_s": 0.209,
+   "duration_s": 0.1638,
    "retrain_signal": 1,
    "alerts": [
     "Доля клиентов выше порога изменилась на +15,8 п. п. относительно предыдущей порции",
@@ -90,9 +90,9 @@
     "Умеренный дрейф: campaign_capped PSI = 0,16",
     "Прогноз доли отклика отличается от факта на -16,4 п. п."
    ],
-   "cli_s": 1.5924310360001073,
+   "cli_s": 1.3774819999998726,
    "retrain": {
-    "started_at": "2026-11-10T19:29:33",
+    "started_at": "2026-11-10T19:43:55",
     "current_version": "v1",
     "candidate": "CatBoost",
     "train_rows": 29596,
@@ -107,8 +107,8 @@
     "cand_calib": -0.15788988204774423,
     "decision": "замена",
     "new_version": "v2",
-    "duration_s": 18.5,
-    "cli_s": 19.86746782
+    "duration_s": 19.32,
+    "cli_s": 20.602244300000166
    }
   },
   "batch_03": {
@@ -136,7 +136,7 @@
    "lift_k": 1.6803,
    "calib_pp": 0.0181,
    "deposits_in_call_list": 88,
-   "duration_s": 0.3677,
+   "duration_s": 0.2841,
    "retrain_signal": 1,
    "alerts": [
     "Доля клиентов выше порога изменилась на +84,1 п. п. относительно предыдущей порции",
@@ -146,9 +146,9 @@
     "Существенный дрейф: macro_pc1 PSI = 8,54; cons.conf.idx PSI = 16,66; contact PSI = 0,92",
     "Умеренный дрейф: age PSI = 0,13"
    ],
-   "cli_s": 1.681059113000174,
+   "cli_s": 1.5319380999990244,
    "retrain": {
-    "started_at": "2026-11-10T19:29:54",
+    "started_at": "2026-11-10T19:44:17",
     "current_version": "v2",
     "candidate": "CatBoost",
     "train_rows": 34476,
@@ -163,8 +163,8 @@
     "cand_calib": -0.0353113534338958,
     "decision": "оставить действующую",
     "new_version": NaN,
-    "duration_s": 20.07,
-    "cli_s": 21.513510990999748
+    "duration_s": 26.12,
+    "cli_s": 27.447510899999543
    }
   },
   "batch_04": {
@@ -192,7 +192,7 @@
    "lift_k": 1.1418,
    "calib_pp": -0.2219,
    "deposits_in_call_list": 252,
-   "duration_s": 0.324,
+   "duration_s": 0.2364,
    "retrain_signal": 1,
    "alerts": [
     "Доля отклика изменилась на +35,5 п. п. относительно предыдущей порции",
@@ -203,9 +203,9 @@
     "Lift@10 % = 1,14 ниже 1,2",
     "Прогноз доли отклика отличается от факта на -22,2 п. п."
    ],
-   "cli_s": 1.6958981609996044,
+   "cli_s": 1.437278299999889,
    "retrain": {
-    "started_at": "2026-11-10T19:30:17",
+    "started_at": "2026-11-10T19:44:46",
     "current_version": "v2",
     "candidate": "CatBoost",
     "train_rows": 39687,
@@ -220,8 +220,8 @@
     "cand_calib": 0.04805109319696732,
     "decision": "замена",
     "new_version": "v3",
-    "duration_s": 23.23,
-    "cli_s": 24.703027391999967
+    "duration_s": 33.35,
+    "cli_s": 34.73482289999993
    }
   }
  },
@@ -242,8 +242,8 @@
  "timing": {
   "big": {
    "rows": 10758,
-   "inside_s": 0.5814,
-   "cli_s": 2.067837956999938
+   "inside_s": 0.4994,
+   "cli_s": 1.9702679000001808
   }
  },
  "idempotency": {
@@ -278,9 +278,9 @@
    "GET /metrics",
    "  -> 200 {\"batch\": \"batch_04\", \"expected_deposits\": 262.7387, \"above_threshold_share\": 1.0, \"response_rate\": 0.445, \"lift_k\": 1.1418, ...}"
   ],
-  "ms_mean": 20.191835535010796,
-  "ms_median": 19.484692000105497,
-  "ms_p95": 25.11482805002742,
+  "ms_mean": 19.197501499966165,
+  "ms_median": 18.32194999951753,
+  "ms_p95": 25.3813149999587,
   "rollback": [
    "v3",
    "v2",
@@ -289,7 +289,7 @@
   "p_rollback": 0.2384,
   "p_back": 0.5074
  },
- "tests": "5 passed in 1.91s",
+ "tests": "5 passed in 1.92s",
  "history": {
   "batch_01": {
    "above_threshold_share": 0.0013831258644536654,
@@ -297,7 +297,7 @@
    "calib_pp": -0.01772251021255522,
    "call_list_size": 362.0,
    "deposits_in_call_list": 28.0,
-   "duration_s": 0.23668554400001085,
+   "duration_s": 0.20073090000005323,
    "expected_deposits": 15.131751611322214,
    "lift_k": 1.471648735097412,
    "out_of_domain_share": 1.0,
@@ -322,7 +322,7 @@
    "calib_pp": -0.16392361611596157,
    "call_list_size": 275.0,
    "deposits_in_call_list": 85.0,
-   "duration_s": 0.20904365399974267,
+   "duration_s": 0.1637722000014037,
    "expected_deposits": 16.270205654853655,
    "lift_k": 1.493305639878575,
    "out_of_domain_share": 1.0,
@@ -347,7 +347,7 @@
    "calib_pp": 0.018059319637359614,
    "call_list_size": 579.0,
    "deposits_in_call_list": 88.0,
-   "duration_s": 0.36767988299970966,
+   "duration_s": 0.28409069999906933,
    "expected_deposits": 109.84174068271878,
    "lift_k": 1.6802594628801963,
    "out_of_domain_share": 1.0,
@@ -372,7 +372,7 @@
    "calib_pp": -0.2218597374414852,
    "call_list_size": 496.0,
    "deposits_in_call_list": 252.0,
-   "duration_s": 0.32398518700028944,
+   "duration_s": 0.23635429999922053,
    "expected_deposits": 262.7387472189703,
    "lift_k": 1.141764551192146,
    "out_of_domain_share": 1.0,
@@ -395,7 +395,7 @@
  "retrains": [
   {
    "batch": "batch_01",
-   "started_at": "2026-11-10T19:29:14",
+   "started_at": "2026-11-10T19:43:32",
    "current_version": "v1",
    "candidate": "CatBoost",
    "train_rows": 26587,
@@ -410,11 +410,11 @@
    "cand_calib": 0.08117578425428185,
    "decision": "оставить действующую",
    "new_version": NaN,
-   "duration_s": 15.98
+   "duration_s": 20.29
   },
   {
    "batch": "batch_02",
-   "started_at": "2026-11-10T19:29:33",
+   "started_at": "2026-11-10T19:43:55",
    "current_version": "v1",
    "candidate": "CatBoost",
    "train_rows": 29596,
@@ -429,11 +429,11 @@
    "cand_calib": -0.15788988204774423,
    "decision": "замена",
    "new_version": "v2",
-   "duration_s": 18.5
+   "duration_s": 19.32
   },
   {
    "batch": "batch_03",
-   "started_at": "2026-11-10T19:29:54",
+   "started_at": "2026-11-10T19:44:17",
    "current_version": "v2",
    "candidate": "CatBoost",
    "train_rows": 34476,
@@ -448,11 +448,11 @@
    "cand_calib": -0.0353113534338958,
    "decision": "оставить действующую",
    "new_version": NaN,
-   "duration_s": 20.07
+   "duration_s": 26.12
   },
   {
    "batch": "batch_04",
-   "started_at": "2026-11-10T19:30:17",
+   "started_at": "2026-11-10T19:44:46",
    "current_version": "v2",
    "candidate": "CatBoost",
    "train_rows": 39687,
@@ -467,8 +467,8 @@
    "cand_calib": 0.04805109319696732,
    "decision": "замена",
    "new_version": "v3",
-   "duration_s": 23.23
+   "duration_s": 33.35
   }
  ],
- "registry": "действующая версия: v3 (с 2026-11-10T19:30:51, ручная активация)\n  v1: CatBoost (после подбора), 18817 строк 2008-05…2008-07, предыдущая —\n  v2: CatBoost (depth = 3, iterations = 500, learning_rate = 0.03, l2_leaf_reg = 3), 29596 строк 2008-05…2009-04, предыдущая v1\n* v3: CatBoost (depth = 3, iterations = 500, learning_rate = 0.03, l2_leaf_reg = 3), 39687 строк 2008-05…2010-05, предыдущая v2"
+ "registry": "действующая версия: v3 (ручная активация, 2026-11-10 19:45:30)\n  v1: CatBoost, 18817 строк 2008-05…2008-07, предыдущая —\n  v2: CatBoost, 29596 строк 2008-05…2009-04, предыдущая v1\n* v3: CatBoost, 39687 строк 2008-05…2010-05, предыдущая v2"
 }

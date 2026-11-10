@@ -1,0 +1,33 @@
+{
+  "version": "v3",
+  "previous": "v2",
+  "activated": "2026-11-10T19:45:30",
+  "reason": "ручная активация",
+  "history": [
+    {
+      "version": "v1",
+      "activated": "2026-11-10T19:43:26",
+      "reason": "начальная версия (ПР3)"
+    },
+    {
+      "version": "v2",
+      "activated": "2026-11-10T19:44:14",
+      "reason": "замена после batch_02"
+    },
+    {
+      "version": "v3",
+      "activated": "2026-11-10T19:45:19",
+      "reason": "замена после batch_04"
+    },
+    {
+      "version": "v2",
+      "activated": "2026-11-10T19:45:29",
+      "reason": "откат"
+    },
+    {
+      "version": "v3",
+      "activated": "2026-11-10T19:45:30",
+      "reason": "ручная активация"
+    }
+  ]
+}
